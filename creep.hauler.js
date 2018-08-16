@@ -4,14 +4,14 @@ const STATE_DEPOSIT_RESOURCE = 2;
 const STATE_GRAB_RESOURCE = 3;
 
 
- creepHauler ={
-     run : function (creep, energyNeed){
+
+     run = function (creep, target){
         if(!creep.memory.state) {
             creep.memory.state = STATE_SPAWNING;
         }
         
         if (creep.memory.target == null){
-            creep.memory.target = energyNeed.id
+            creep.memory.target = target.id
         }
         
         switch(creep.memory.state) {
@@ -27,9 +27,9 @@ const STATE_GRAB_RESOURCE = 3;
         case STATE_DEPOSIT_RESOURCE:
             runDepositResource(creep, {nextState: STATE_MOVING});
             break;
-     }
-     
-    runSpawning : function(creep) {
+        }
+    }
+    runSpawning = function(creep) {
 
     // "until it pops out of the spawn" -> when creep.spawning == false, we transition to the next state.
         if(!creep.spawning) {
@@ -43,10 +43,9 @@ const STATE_GRAB_RESOURCE = 3;
         switch(currentState) {
             case STATE_MOVING:
                 if(_.sum(creep.carry) > 0) {
-                    creep.memory.targetPos = getHaulerDepositTarget(creep);
                     return {nextState: STATE_DEPOSIT_RESOURCE};
                 } else {
-                    creep.memory.targetPos = creep.memory.sourcePos;	// or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
+                    // or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
                     return {nextState: STATE_GRAB_RESOURCE};
                 }
                 break;
@@ -61,16 +60,27 @@ const STATE_GRAB_RESOURCE = 3;
         var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState;
         
         // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
-        var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
-        
+        //var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
+        var pos = Game.getObjectById(creep.memory.target).pos
+
         // Has the creep arrived?
         if(creep.pos == pos) {
             creep.memory.state = transitionState;
             run(creep);
             return;
+        }else{
+            creep.moveTo(pos, {reusePath: 50})
         }
-    }
-}
+    };
+
+    runGrabResource = function(creep,options){
+        
+    };
  
 
-module.exports = creepHauler;
+module.exports = {
+    runMoving,
+    run,
+    runSpawning,
+    haulerContext,
+};

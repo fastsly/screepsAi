@@ -61,7 +61,7 @@ const workAssignment = {
         
         
         
-    }
+    },
     
     haulers : function (energyNeed,haulers,defCon){
         let i=0;
@@ -69,33 +69,33 @@ const workAssignment = {
             creepHauler.run(creep,energyNeed[i])
             i++
         }
-    }
+    },
     
     builders : function(constSites,builders, defCon){
         
         for(let creep of builders){
             creepBuilder.run(creep,constSites[0])
         }
-    }
+    },
     
     miners : function(){
         
         for(let creep of miners){
             creepMiner.run(creep)
         }
-    }
+    },
     
     upgraders : function (defCon){
         for(let creep of upgraders){
             creepUpgrader.run(creep)
         }
-    }
+    },
     
     repairers : function (defCon){
         for(let creep of repairers){
             creepRepair.run(creep)
         }
-    }
+    },
     
 } 
 module.exports = workAssignment;
