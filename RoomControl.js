@@ -35,9 +35,10 @@ var RoomControl = {
         let constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
         let buildingsNeedEnergy = room.find(FIND_STRUCTURES, {
                     filter: (structure) => {//subtract the current max carry capacity of carriers
-                        if((structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_CONTAINER)&&(structure.store[RESOURCE_ENERGY] < (structure.storeCapacity-300)){
+                        if((structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_CONTAINER)&&(structure.store[RESOURCE_ENERGY] < (structure.storeCapacity-300)))
+                        {
                            if(structure.structureType == STRUCTURE_CONTAINER) {
-                               for (let k of resource.get_source_containers(room)()){
+                               for (let k of resourceManager.get_source_containers(room)()){
                                     if(k == structure.id ){
                                         return false
                                     }else{

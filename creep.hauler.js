@@ -26,6 +26,7 @@ const STATE_GRAB_RESOURCE = 3;
             break;
         case STATE_DEPOSIT_RESOURCE:
             runDepositResource(creep, {nextState: STATE_MOVING});
+            creep.memory.grabTarget=
             break;
         }
     }
