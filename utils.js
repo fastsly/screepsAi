@@ -13,12 +13,12 @@ assign_container = function ( creep, options){
 
     
     for (let i of containers){
-        if (Memory.containers_creep_nr[i.id]<1){
+        if (Memory.containers_creep_nr[i.id]<1 && _.sum(i.store)> creepFactory.getCarryCapacity){
             Memory.containers_creep_nr[i.id] = 1
             return i.id
         }else{
             let temp = Memory.containers_creep_nr[i.id];
-            if (Memory.containers_creep_nr[i.id])
+            if (Memory.containers_creep_nr[i.id] < && _.sum(i.store)> creepFactory.getCarryCapacity)
         }
     }
 }
