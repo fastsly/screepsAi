@@ -1,4 +1,4 @@
-/"use strict";
+//"use strict";
 
 // Resources Module handles determining what sort of mode we should be operating in.
 //
