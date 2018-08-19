@@ -4,6 +4,10 @@ const creepFactory = require ('creepFactory')
 assign_container = function ( creep, options){
     let containers = resourceManager.get_source_containers(creep.room)
     
+    if (containers.length<3){
+        return "pickup"
+    }
+
     if (Memory.containers_creep_nr == undefined){
         Memory.containers_creep_nr = {}
         for (let i of containers){

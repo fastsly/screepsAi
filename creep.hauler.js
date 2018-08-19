@@ -63,19 +63,31 @@ const STATE_GRAB_RESOURCE = 3;
         
         // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
         //var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
+        //meybe extract this v
         if(transitionState == STATE_GRAB_RESOURCE){
-            if(creep.memory.grabTarget== null){
+            if(creep.memory.grabTarget== null){                     //when we  dont have a grabtarget
                 let temp_container = assign_container(creep)
-                if (temp_container){
-                    creep.memory.grabTarget=temp_container
+                if(temp_container != "pickup"){                     //when we have containers
+                    creep.memeory.pickup = false;
+                    if (temp_container){                            //when theyre not empty
+                        creep.memory.grabTarget=temp_container
+                        var pos = Game.getObjectById(creep.memory.grabTarget).pos
+                    }else{                                          //when theyre empty
+                        var pos = Game.flags.Flag1.pos
+                    }
+                }else{                                              //when we dont have containers
+                    creep.memory.pickup = true;
+                    temp_pickup = creep.pos.findClosestByPath(FIND_DROPPED_ENERGY,{
+                    filter:(object)=>{
+                        if(object.amount>=creep.carryCapacity) {return object}
+                    }})
+                    creep.memory.grabTarget=temp_pickup.id;
                     var pos = Game.getObjectById(creep.memory.grabTarget).pos
-                }else{
-                    var pos = Game.flags.Flag1.pos
                 }
-            }else{
+            }else{                                                  //when we know the grabtarget
                 var pos = Game.getObjectById(creep.memory.grabTarget).pos
             }
-        }else{
+        }else{                                                      //when we go for depositing
             var pos = Game.getObjectById(creep.memory.target).pos
         }
         // Has the creep arrived?
@@ -89,13 +101,36 @@ const STATE_GRAB_RESOURCE = 3;
     };
 
     runGrabResource = function(creep,options){
+        if (creep.memory.pickup){
+            creep.pickup(Game.getObjectById(creep.memory.grabTarget))
+        }else{
+            creep.withdraw(Game.getObjectById(creep.memory.grabTarget),RESOURCE_ENERGY)
+            
+        }  
+            if(_.sum(creep.carry) == creep.carryCapacity){
+                creep.memory.grabTarget= null;
+                creep.memory.state = options.nextState;
+                run(creep);  
+                return;
+            }
         
     };
- 
+
+    runDepositResource = function(creep,options){
+        creep.transfer(Game.getObjectById(creep.memory.target),RESOURCE_ENERGY);
+        if (_.sum(creep.carry) == 0){
+            creep.memory.target= null;
+            creep.memory.state = options.nextState;
+            run(creep);  
+            return;
+        }
+    }
 
 module.exports = {
     runMoving,
     run,
     runSpawning,
     haulerContext,
+    runDepositResource,
+    runGrabResource,
 };
