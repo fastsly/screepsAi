@@ -3,6 +3,7 @@ const STATE_MOVING = 1;
 const STATE_DEPOSIT_RESOURCE = 2;
 const STATE_GRAB_RESOURCE = 3;
 
+const utils = require("utils")
 
 
      run = function (creep, target){
@@ -66,7 +67,7 @@ const STATE_GRAB_RESOURCE = 3;
         //meybe extract this v
         if(transitionState == STATE_GRAB_RESOURCE){
             if(creep.memory.grabTarget== null){                     //when we  dont have a grabtarget
-                let temp_container = assign_container(creep)
+                let temp_container = utils.assign_container(creep)
                 if(temp_container != "pickup"){                     //when we have containers
                     creep.memeory.pickup = false;
                     if (temp_container){                            //when theyre not empty

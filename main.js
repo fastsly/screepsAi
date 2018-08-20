@@ -5,6 +5,9 @@ module.exports.loop = function () {
     grafana.collect_stats();
     for(let name in Memory.creeps) {
         if(!Game.creeps[name]) {
+            if (Memory.creeps[name].role == "miner"){  //when miner dies we delete the occupied mining position
+                Memory.source_containers_has_miner[Memory.creeps[name].target] = false
+            }
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }

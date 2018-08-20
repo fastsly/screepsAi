@@ -4,23 +4,23 @@ const creepFactory = require ('creepFactory')
 assign_container = function ( creep, options){
     let containers = resourceManager.get_source_containers(creep.room)
     
-    if (containers.length<3){
+    if (containers.length<2){
         return "pickup"
     }
 
-    if (Memory.containers_creep_nr == undefined){
-        Memory.containers_creep_nr = {}
+    if (Memory[creep.room.name].containers_creep_nr == undefined){
+        Memory[creep.room.name].containers_creep_nr = {}
         for (let i of containers){
             let temp = i.id
-            Memory.containers_creep_nr[temp] = 0;
+            Memory[creep.room.name].containers_creep_nr[temp] = 0;
         } 
     }
 
-    bubbleSort(containers);
+    bubbleSort(containers,creep);
 
     for (let i of containers){
         if ( _.sum(i.store) > creepFactory.getCarryCapacity) {
-            Memory.containers_creep_nr[i.id] = Memory.containers_creep_nr[i.id]+1;
+            Memory[creep.room.name].containers_creep_nr[i.id] = Memory[creep.room.name].containers_creep_nr[i.id]+1;
             return i.id;
         }
     }
@@ -28,11 +28,11 @@ assign_container = function ( creep, options){
     return null
 }
  
-function bubbleSort(arr){
+function bubbleSort(arr,creep){
     var len = arr.length;
     for (var i = len-1; i>=0; i--){
       for(var j = 1; j<=i; j++){
-        if(Memory.containers_creep_nr[arr[j-1].id]>Memory.containers_creep_nr[arr[j].id]){
+        if(Memory[creep.room.name].containers_creep_nr[arr[j-1].id]>Memory[creep.room.name].containers_creep_nr[arr[j].id]){
             var temp = arr[j-1];
             arr[j-1] = arr[j];
             arr[j] = temp;

@@ -53,7 +53,7 @@ var RoomControl = {
         });
 
         return {
-            needEneergy: buildingsNeedEnergy,
+            needEnergy: buildingsNeedEnergy,
             constructionSite: constructionSites
         }
 

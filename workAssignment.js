@@ -57,13 +57,15 @@ const workAssignment = {
             }
         );
         
-        
-        
-        
+        runHaulers(energyNeed.needEnergy,haulers)
+        runBuilders(energyNeed.constructionSite,builders)
+        runMiners(miners)
+        runUpgraders(upgraders)
+        runRepairers(repairers)
         
     },
     
-    haulers : function (energyNeed,haulers,defCon){
+    runHaulers : function (energyNeed,haulers,defCon){
         let i=0;
         for(let creep of haulers){
             creepHauler.run(creep,energyNeed[i])
@@ -71,27 +73,27 @@ const workAssignment = {
         }
     },
     
-    builders : function(constSites,builders, defCon){
+    runBuilders : function(constSites,builders, defCon){
         
         for(let creep of builders){
             creepBuilder.run(creep,constSites[0])
         }
     },
     
-    miners : function(){
+    runMiners : function(miners){
         
         for(let creep of miners){
             creepMiner.run(creep)
         }
     },
     
-    upgraders : function (defCon){
+    runUpgraders : function (upgraders,defCon){
         for(let creep of upgraders){
             creepUpgrader.run(creep)
         }
     },
     
-    repairers : function (defCon){
+    runRepairers : function (repairers,defCon){
         for(let creep of repairers){
             creepRepair.run(creep)
         }
