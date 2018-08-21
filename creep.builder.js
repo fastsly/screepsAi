@@ -33,7 +33,7 @@ run = function (creep, target){
         runGrabResource(creep, {nextState: STATE_MOVING});
         break;
     case STATE_CONSTRUCT:
-       
+    
             runConstruct(creep, {nextState: STATE_MOVING});
         
         break;

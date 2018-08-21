@@ -14,7 +14,7 @@ const STATE_MINE = 2;
 const utils = require("utils")
 
 
-     run = function (creep, ){
+    run = function (creep, ){
         if(!creep.memory.state) {
             creep.memory.state = STATE_SPAWNING;
         }
@@ -126,7 +126,11 @@ const utils = require("utils")
         }
     };
 
+    runMine = function (creep,options){
+        let target= creep.memory.target.pos.findClosestByRange(FIND_SOURCES);
+        creep.harvest(target)
+    }
     
 module.exports = {
-
+    run,
 };

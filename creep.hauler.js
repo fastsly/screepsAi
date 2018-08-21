@@ -6,7 +6,7 @@ const STATE_GRAB_RESOURCE = 3;
 const utils = require("utils")
 
 
-     run = function (creep, target){
+    run = function (creep, target){
         if(!creep.memory.state) {
             creep.memory.state = STATE_SPAWNING;
         }
@@ -26,7 +26,7 @@ const utils = require("utils")
             runGrabResource(creep, {nextState: STATE_MOVING});
             break;
         case STATE_DEPOSIT_RESOURCE:
-           
+        
                 runDepositResource(creep, {nextState: STATE_MOVING});
             
             break;
