@@ -80,7 +80,7 @@ runMoving = function(creep, options) {
                 }
             }else{                                              //when we dont have containers
                 creep.memory.pickup = true;
-                temp_pickup = creep.pos.findClosestByPath(FIND_DROPPED_ENERGY,{
+                temp_pickup = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY,{
                 filter:(object)=>{
                     if(object.amount>=creep.carryCapacity) {return object}
                 }})

@@ -12,7 +12,6 @@ const creepMiner = require('creep.miner');
 const creepRepair = require('creep.repair');
 const creepUpgrader = require('creep.upgrader');
 
- 
 const workAssignment = {
     run : function (energyNeed, toRepair ){
         var miners = _.filter(room.find(FIND_CREEPS), (creep) => {
@@ -61,7 +60,7 @@ const workAssignment = {
         runBuilders(energyNeed.constructionSite,builders)
         runMiners(miners)
         runUpgraders(upgraders)
-        runRepairers(repairers)
+        runRepairers(repairers,toRepair)
         
     },
     
@@ -93,9 +92,10 @@ const workAssignment = {
         }
     },
     
-    runRepairers : function (repairers,defCon){
+    runRepairers : function (repairers,toRepair,defCon){
         for(let creep of repairers){
-            creepRepair.run(creep)
+            creepRepair.run(creep,toRepair.pop())
+
         }
     },
     

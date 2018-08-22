@@ -8,7 +8,7 @@
  */
 const STATE_SPAWNING = 0;
 const STATE_MOVING = 1;
-const STATE_DEPOSIT_RESOURCE = 2;
+const STATE_UPGRADE = 2;
 const STATE_GRAB_RESOURCE = 3;
 
 const utils = require("utils")
@@ -20,7 +20,7 @@ const utils = require("utils")
         }
         
         if (creep.memory.target == null){
-            creep.memory.target = target.id
+            creep.memory.target = creep.room.controller.id
         }
         
         switch(creep.memory.state) {
@@ -33,9 +33,9 @@ const utils = require("utils")
         case STATE_GRAB_RESOURCE:
             runGrabResource(creep, {nextState: STATE_MOVING});
             break;
-        case STATE_DEPOSIT_RESOURCE:
+        case STATE_UPGRADE:
         
-                runDepositResource(creep, {nextState: STATE_MOVING});
+                runUpgrade(creep, {nextState: STATE_MOVING});
             
             break;
         }
@@ -54,7 +54,7 @@ const utils = require("utils")
         switch(currentState) {
             case STATE_MOVING:
                 if(_.sum(creep.carry) > 0) {
-                    return {nextState: STATE_DEPOSIT_RESOURCE};
+                    return {nextState: STATE_UPGRADE};
                 } else {
                     // or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
                     return {nextState: STATE_GRAB_RESOURCE};
@@ -75,17 +75,14 @@ const utils = require("utils")
         //meybe extract this v
         if(transitionState == STATE_GRAB_RESOURCE){
             if(creep.memory.grabTarget== null){                     //when we  dont have a grabtarget
-                let temp_container = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
+                let temp_container = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
                 if(temp_container){                     //when we have containers
                     creep.memeory.pickup = false;
                         creep.memory.grabTarget=temp_container
                         var pos = Game.getObjectById(creep.memory.grabTarget).pos
-                    }else{                                          //when theyre empty
-                        var pos = Game.flags.Flag1.pos
-                    }
                 }else{                                              //when we dont have containers
                     creep.memory.pickup = true;
-                    temp_pickup = creep.pos.findClosestByPath(FIND_DROPPED_ENERGY,{
+                    temp_pickup = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY,{
                     filter:(object)=>{
                         if(object.amount>=creep.carryCapacity) {return object}
                     }})
@@ -124,8 +121,8 @@ const utils = require("utils")
         
     };
 
-    runDepositResource = function(creep,options){
-        creep.transfer(Game.getObjectById(creep.memory.target),RESOURCE_ENERGY);
+    runUpgrade = function(creep,options){
+        creep.upgradeController(creep.room.controller)
         if (_.sum(creep.carry) == 0){
             creep.memory.target= null;
             creep.memory.state = options.nextState;
@@ -139,6 +136,6 @@ module.exports = {
     run,
     runSpawning,
     haulerContext,
-    runDepositResource,
+    runUpgrade,
     runGrabResource,
 };

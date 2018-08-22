@@ -51,6 +51,7 @@ var RoomControl = {
 
             }
         });
+        
 
         return {
             needEnergy: buildingsNeedEnergy,
@@ -66,6 +67,7 @@ var RoomControl = {
 
             }
         });
+        buildingsNeedRepair.sort((a,b) => b.hits - a.hits);
 
         return buildingsNeedRepair;
 
