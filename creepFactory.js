@@ -43,14 +43,20 @@ run = function (creepType, level){
             } else
             if(level <= 2) {
                 abilities = [WORK, WORK, WORK, WORK, WORK, MOVE];
+            }else
+            if(level <= 3) {
+                abilities = [WORK, WORK, WORK, WORK, WORK, MOVE, MOVE];
             }
             break;
         case 'upgrader':
             if(level <= 1) {
-                abilities = [WORK, WORK, MOVE];
+                abilities = [WORK, WORK, CARRY, MOVE];
             } else
             if(level <= 2) {
-                abilities = [WORK, WORK, WORK, MOVE];
+                abilities = [WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
+            }else
+            if(level <= 3) {
+                abilities = [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
             }
             break;
         case 'repair':
@@ -58,7 +64,7 @@ run = function (creepType, level){
                 abilities = [WORK, CARRY, MOVE];
             } else
             if(level <= 2) {
-                abilities = [WORK, WORK, CARRY, MOVE];
+                abilities = [WORK, WORK, CARRY, MOVE, MOVE];
             }
             break;
         case 'builder':
@@ -66,32 +72,11 @@ run = function (creepType, level){
                 abilities = [WORK, CARRY, MOVE];
             } else
             if(level <= 2) {
-                abilities = [WORK, WORK, CARRY, MOVE];
-            } else
-            if(level <= 3) {
                 abilities = [WORK, WORK, CARRY, MOVE, MOVE];
             } else
-            if(level <= 4) {
-                abilities = [WORK, WORK, WORK, CARRY, MOVE, MOVE];
-            } else
-            if(level <= 5) {
-                abilities = [WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
-            } else
-            if(level <= 6) {
-                abilities = [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE];
-            } else
-            if(level <= 7) {
-                abilities = [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE];
-            } else
-            if(level <= 8) {
-                abilities = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE];
-            } else
-            if(level <= 9) {
-                abilities = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
-            } else
-            if(level >= 10) {
-                abilities = [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
-            }
+            if(level <= 3) {
+                abilities = [WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE];
+            } 
         break;
         case 'carry':
             if(level <= 1) {
@@ -104,24 +89,15 @@ run = function (creepType, level){
                 abilities = [CARRY, CARRY, MOVE, MOVE];
             } else
             if(level <= 4) {
-                abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+                abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE];
             } else
             if(level <= 5) {
                 abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
             } else
             if(level <= 6) {
-                abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
-            } else
-            if(level <= 7) {
                 abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
             } else
-            if(level <= 8) {
-                abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
-            } else
-            if(level <= 9) {
-                abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
-            } else
-            if(level >= 10) {
+            if(level <= 7) {
                 abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,  CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
             }
         break;

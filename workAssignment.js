@@ -56,6 +56,13 @@ const workAssignment = {
             }
         );
         
+        if (room.energyAvailable<=300 && room.controller.level==1){
+            if (miners.length < 1){
+                creepFactory.run
+            }else
+            if ( )
+        }
+
         runHaulers(energyNeed.needEnergy,haulers)
         runBuilders(energyNeed.constructionSite,builders)
         runMiners(miners)
