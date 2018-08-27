@@ -16,7 +16,7 @@ var RoomControl = {
 
 
 
-        workAssignment.run(energyNeed(room), toRepair(room));
+        workAssignment.run(room,energyNeed(room), toRepair(room));
         
 
         
