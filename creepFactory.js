@@ -4,7 +4,7 @@ var getCarryCapacity = function(){
     return 300
 }
 
-var run = function (creepType, level){
+var run = function (creepType, level, room){
     // TOUGH          10
 	// MOVE           50
 	// CARRY          50
@@ -36,6 +36,9 @@ var run = function (creepType, level){
     7	50 extensions (100 capacity)
     8	60 extensions (200 capacity)
     */
+    let spawn = room.find(FIND_MY_SPAWNS)
+   let abilities
+   let id = Game.time
     switch(creepType) {
         case 'miner':
             if(level <= 1) {
@@ -161,7 +164,7 @@ var run = function (creepType, level){
         break;
     }
     console.log('Spawn level ' + level + ' ' + creepType);
-    spawn.createCreep(abilities, creepType + '-' + id, {memory: {role: creepType,target: null}});
+    spawn[0].spawnCreep(abilities, creepType + '-' + id, {memory: {role: creepType,target: null}});
 }
 
 module.exports = {

@@ -11,9 +11,10 @@ const creepBuilder = require('creep.builder');
 const creepMiner = require('creep.miner');
 const creepRepair = require('creep.repair');
 const creepUpgrader = require('creep.upgrader');
+const creepFactory = require('creepFactory');
 
-const workAssignment = {
-    run : function (room,energyNeed, toRepair ){
+
+var run = function (room,energyNeed, toRepair ){
         try{
             var miners = _.filter(room.find(FIND_CREEPS), (creep) => {
                     if (creep.my == false){
@@ -81,103 +82,113 @@ const workAssignment = {
                     }
                 }
             }
-    */
+    */      try{
             let sources = room.find(FIND_SOURCES);
             if (room.energyAvailable<=300 && room.controller.level==1){
                 if (miners.length < 1){
-                    creepFactory.run("miner",1);
+                    creepFactory.run("miner",1,room);
                 }else
                 if (haulers.length < 1){
-                    creepFactory.run('carry',1);
+                    creepFactory.run('carry',1,room);
                 }else
                 if (miners.length <3){
-                    creepFactory.run("miner",1);
+                    creepFactory.run("miner",1,room);
                 }else
                 if(haulers.length<3){
-                    creepFactory.run('carry',1);
+                    creepFactory.run('carry',1,room);
                 }else
                 if(upgraders.length < 3){
-                    creepFactory.run("upgrader",1);
+                    creepFactory.run("upgrader",1,room);
                 }else
                 if(energyNeed.constructionSite){
                     if(builders.length<energyNeed.constructionSite.length && builders.length<3){
-                        creepFactory.run("builder",1);
+                        creepFactory.run("builder",1,room);
                     }
                 }else
                 if(repairers.length < 1){
-                    creepFactory.run("repair",1);
+                    creepFactory.run("repair",1,room);
                 }
             }else
             if(room.energyAvailable<=550 && room.controller.level==2){
                 if (miners.length < 1){
-                    creepFactory.run("miner",2);
+                    creepFactory.run("miner",2,room);
                 }else
                 if (haulers.length < 1){
-                    creepFactory.run('carry',2);
+                    creepFactory.run('carry',2,room);
                 }else
                 if (miners.length < sources.length){
-                    creepFactory.run("miner",2);
+                    creepFactory.run("miner",2,room);
                 }else
                 if(haulers.length < sources.length+1){
-                    creepFactory.run('carry',2);
+                    creepFactory.run('carry',2,room);
                 }else
                 if(upgraders.length < 3){
-                    creepFactory.run("upgrader",2);
+                    creepFactory.run("upgrader",2,room);
                 }else
                 if(energyNeed.constructionSite){
                     if(builders.length<energyNeed.constructionSite.length && builders.length<3){
-                        creepFactory.run("builder",2);
+                        creepFactory.run("builder",2,room);
                     }
                 }else
                 if(repairers.length < 1){
-                    creepFactory.run("repair",1);
+                    creepFactory.run("repair",1,room);
                 }
             }
+            }catch(err){
+                console.log('i have an error at creepfactory call in work assignment'+err)
+            }    
 
+            try{
             runHaulers(energyNeed.needEnergy,haulers)
             runBuilders(energyNeed.constructionSite,builders)
             runMiners(miners)
             runUpgraders(upgraders)
             runRepairers(repairers,toRepair)
+            }catch(err){
+                console.log('ive caught an error at runners in work assignment: '+err)
+            }
+
         }catch(err){
             console.log('i have an error in work assignment'+err)
         }    
-    },
+    }
     
-    runHaulers : function (energyNeed,haulers,defCon){
+    var runHaulers = function (energyNeed,haulers,defCon){
         let i=0;
         for(let creep of haulers){
             creepHauler.run(creep,energyNeed[i])
             i++
         }
-    },
+    }
     
-    runBuilders : function(constSites,builders, defCon){
+    var runBuilders = function(constSites,builders, defCon){
         
         for(let creep of builders){
             creepBuilder.run(creep,constSites[0])
         }
-    },
+    }
     
-    runMiners : function(miners){
+    var runMiners = function(miners){
         
         for(let creep of miners){
             creepMiner.run(creep)
         }
-    },
+    }
     
-    runUpgraders : function (upgraders,defCon){
+    var runUpgraders = function (upgraders,defCon){
         for(let creep of upgraders){
             creepUpgrader.run(creep)
         }
-    },
+    }
     
-    runRepairers : function (repairers,toRepair,defCon){
+    var runRepairers = function (repairers,toRepair,defCon){
         for(let creep of repairers){
             creepRepair.run(creep,toRepair.pop())
 
         }
-    },
+    }
     
-} 
-module.exports = workAssignment;
+
+module.exports = {
+    run,
+};
