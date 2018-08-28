@@ -1,4 +1,4 @@
-//const resourceManager = require('resourceManager');
+const resources = require('resources');
 const workAssignment = require('workAssignment');
 
 
@@ -34,33 +34,41 @@ var run = function (room) {
  var   defCon = function (room) {
         //implement what to do when hostile creep
     }
- var   energyNeed = function (room) {//set up prioritisation
-        let constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
-        let buildingsNeedEnergy = room.find(FIND_STRUCTURES, {
-            filter: (structure) => {//subtract the current max carry capacity of carriers
-                if ((structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_CONTAINER) && (structure.store[RESOURCE_ENERGY] < (structure.storeCapacity - 300))) {
-                    if (structure.structureType == STRUCTURE_CONTAINER) {
-                        for (let k of resource.get_source_containers(room)()) {
-                            if (k == structure.id) {
+    var   energyNeed = function (current_room) {//set up prioritisation
+        try{
+        var constructionSites = current_room.find(FIND_MY_CONSTRUCTION_SITES);
+        var buildingsAll = current_room.find(FIND_MY_STRUCTURES);
+        
+        var buildings = _.filter(buildingsAll, (structure) => {//subtract the current max carry capacity of carriers
+                if ((structure.structureType == STRUCTURE_TOWER 
+                || structure.structureType == STRUCTURE_SPAWN 
+                || structure.structureType == STRUCTURE_EXTENSION 
+                || structure.structureType == STRUCTURE_CONTAINER)) {
+                    if (structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] < (structure.storeCapacity - 300)) {
+                        for (var kilo of resources.get_source_containers(room)()) {
+                            if (kilo == structure.id) {
                                 return false
                             } else {
                                 return true
                             }
                         }
-                    } else {
-                        return true
+                    } else
+                    if (structure.structureType == STRUCTURE_TOWER 
+                        || structure.structureType == STRUCTURE_SPAWN 
+                        || structure.structureType == STRUCTURE_EXTENSION ){
+
                     }
                 }
 
-            }
-        });
+            })
         
-
         return {
-            needEnergy: buildingsNeedEnergy,
+            needEnergy: buildings,
             constructionSite: constructionSites
         }
-
+        }catch(err){
+            console.log('its in here in energyNeed: '+ err)
+        }
     }
 
  var   toRepair= function (room) {
