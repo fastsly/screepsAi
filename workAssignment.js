@@ -14,131 +14,134 @@ const creepUpgrader = require('creep.upgrader');
 
 const workAssignment = {
     run : function (room,energyNeed, toRepair ){
-        var miners = _.filter(room.find(FIND_CREEPS), (creep) => {
-                if (creep.my == false){
-                    return false
-                }else{
-                    return creep.memory.role == 'miner'
-                }
-            }
-        );
-        var haulers = _.filter(room.find(FIND_CREEPS), (creep) => {
-                if (creep.my == false){
-                    return false
-                }else{
-                    return creep.memory.role == 'carry'
-                }
-            }
-        );
-        var builders = _.filter(room.find(FIND_CREEPS), (creep) => {
-                if (creep.my == false){
-                    return false
-                }else{
-                    return creep.memory.role == 'builder'
-                }
-            }
-        );
-        var repairers = _.filter(room.find(FIND_CREEPS), (creep) => {
-                if (creep.my == false){
-                    return false
-                }else{
-                    return creep.memory.role == 'repair'
-                }
-            }
-        );
-        
-        var upgraders = _.filter(room.find(FIND_CREEPS), (creep) => {
-                if (creep.my == false){
-                    return false
-                }else{
-                    return creep.memory.role == 'upgrader'
-                }
-            }
-        );
-        /* to dynamically assign miners nr
-        var minerNr
-        let sources = room.find(FIND_SOURCES);
-        for (let k of sources){
-            for(let i = -1; i < 2; i++) {
-                for(let j = -1; j < 2; j++) {
-                    var passable=false;
-                    let place =room.lookAt((k.pos.x+i),(k.pos.y+j));
-                    for (let item of place){                                
-                        for( let key in item ) {
-                            if (item[key] == "terrain"){var terrain =true}
-                            if (item[key] == "wall"){var wall= true}
-                        }
-                        if (terrain && wall){ passable= false}
-                        else{
-                            passable= true
-
-                        }
-                    }
-                    if (passable){
-                        minerNr++
+        try{
+            var miners = _.filter(room.find(FIND_CREEPS), (creep) => {
+                    if (creep.my == false){
+                        return false
+                    }else{
+                        return creep.memory.role == 'miner'
                     }
                 }
-            }
-        }
-*/
-        let sources = room.find(FIND_SOURCES);
-        if (room.energyAvailable<=300 && room.controller.level==1){
-            if (miners.length < 1){
-                creepFactory.run("miner",1);
-            }else
-            if (haulers.length < 1){
-                creepFactory.run('carry',1);
-            }else
-            if (miners.length <3){
-                creepFactory.run("miner",1);
-            }else
-            if(haulers.length<3){
-                creepFactory.run('carry',1);
-            }else
-            if(upgraders.length < 3){
-                creepFactory.run("upgrader",1);
-            }else
-            if(energyNeed.constructionSite){
-                if(builders.length<energyNeed.constructionSite.length && builders.length<3){
-                    creepFactory.run("builder",1);
+            );
+            var haulers = _.filter(room.find(FIND_CREEPS), (creep) => {
+                    if (creep.my == false){
+                        return false
+                    }else{
+                        return creep.memory.role == 'carry'
+                    }
                 }
-            }else
-            if(repairers.length < 1){
-                creepFactory.run("repair",1);
-            }
-        }else
-        if(room.energyAvailable<=550 && room.controller.level==2){
-            if (miners.length < 1){
-                creepFactory.run("miner",2);
-            }else
-            if (haulers.length < 1){
-                creepFactory.run('carry',2);
-            }else
-            if (miners.length < sources.length){
-                creepFactory.run("miner",2);
-            }else
-            if(haulers.length < sources.length+1){
-                creepFactory.run('carry',2);
-            }else
-            if(upgraders.length < 3){
-                creepFactory.run("upgrader",2);
-            }else
-            if(energyNeed.constructionSite){
-                if(builders.length<energyNeed.constructionSite.length && builders.length<3){
-                    creepFactory.run("builder",2);
+            );
+            var builders = _.filter(room.find(FIND_CREEPS), (creep) => {
+                    if (creep.my == false){
+                        return false
+                    }else{
+                        return creep.memory.role == 'builder'
+                    }
                 }
-            }else
-            if(repairers.length < 1){
-                creepFactory.run("repair",1);
-            }
-        }
+            );
+            var repairers = _.filter(room.find(FIND_CREEPS), (creep) => {
+                    if (creep.my == false){
+                        return false
+                    }else{
+                        return creep.memory.role == 'repair'
+                    }
+                }
+            );
+            
+            var upgraders = _.filter(room.find(FIND_CREEPS), (creep) => {
+                    if (creep.my == false){
+                        return false
+                    }else{
+                        return creep.memory.role == 'upgrader'
+                    }
+                }
+            );
+            /* to dynamically assign miners nr
+            var minerNr
+            let sources = room.find(FIND_SOURCES);
+            for (let k of sources){
+                for(let i = -1; i < 2; i++) {
+                    for(let j = -1; j < 2; j++) {
+                        var passable=false;
+                        let place =room.lookAt((k.pos.x+i),(k.pos.y+j));
+                        for (let item of place){                                
+                            for( let key in item ) {
+                                if (item[key] == "terrain"){var terrain =true}
+                                if (item[key] == "wall"){var wall= true}
+                            }
+                            if (terrain && wall){ passable= false}
+                            else{
+                                passable= true
 
-        runHaulers(energyNeed.needEnergy,haulers)
-        runBuilders(energyNeed.constructionSite,builders)
-        runMiners(miners)
-        runUpgraders(upgraders)
-        runRepairers(repairers,toRepair)
-        
+                            }
+                        }
+                        if (passable){
+                            minerNr++
+                        }
+                    }
+                }
+            }
+    */
+            let sources = room.find(FIND_SOURCES);
+            if (room.energyAvailable<=300 && room.controller.level==1){
+                if (miners.length < 1){
+                    creepFactory.run("miner",1);
+                }else
+                if (haulers.length < 1){
+                    creepFactory.run('carry',1);
+                }else
+                if (miners.length <3){
+                    creepFactory.run("miner",1);
+                }else
+                if(haulers.length<3){
+                    creepFactory.run('carry',1);
+                }else
+                if(upgraders.length < 3){
+                    creepFactory.run("upgrader",1);
+                }else
+                if(energyNeed.constructionSite){
+                    if(builders.length<energyNeed.constructionSite.length && builders.length<3){
+                        creepFactory.run("builder",1);
+                    }
+                }else
+                if(repairers.length < 1){
+                    creepFactory.run("repair",1);
+                }
+            }else
+            if(room.energyAvailable<=550 && room.controller.level==2){
+                if (miners.length < 1){
+                    creepFactory.run("miner",2);
+                }else
+                if (haulers.length < 1){
+                    creepFactory.run('carry',2);
+                }else
+                if (miners.length < sources.length){
+                    creepFactory.run("miner",2);
+                }else
+                if(haulers.length < sources.length+1){
+                    creepFactory.run('carry',2);
+                }else
+                if(upgraders.length < 3){
+                    creepFactory.run("upgrader",2);
+                }else
+                if(energyNeed.constructionSite){
+                    if(builders.length<energyNeed.constructionSite.length && builders.length<3){
+                        creepFactory.run("builder",2);
+                    }
+                }else
+                if(repairers.length < 1){
+                    creepFactory.run("repair",1);
+                }
+            }
+
+            runHaulers(energyNeed.needEnergy,haulers)
+            runBuilders(energyNeed.constructionSite,builders)
+            runMiners(miners)
+            runUpgraders(upgraders)
+            runRepairers(repairers,toRepair)
+        }catch(err){
+            console.log('i have an error in work assignment'+err)
+        }    
     },
     
     runHaulers : function (energyNeed,haulers,defCon){

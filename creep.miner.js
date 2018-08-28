@@ -14,7 +14,7 @@ const STATE_MINE = 2;
 const utils = require("utils")
 
 
-    run = function (creep, ){
+var    run = function (creep, ){
         if(!creep.memory.state) {
             creep.memory.state = STATE_SPAWNING;
         }
@@ -33,7 +33,7 @@ const utils = require("utils")
             break;
         }
     }
-    runSpawning = function(creep) {
+var    runSpawning = function(creep) {
         if (!Memory[creep.room.name].source_containers_has_miner){ //we initialize the miner switches for source controller 
             let targets = resourceManager.get_source_containers(creep.room)
             Memory[creep.room.name].source_containers_has_miner = {}
@@ -67,7 +67,7 @@ const utils = require("utils")
         }
     }
     
-    haulerContext = function(creep, currentState) {
+var    haulerContext = function(creep, currentState) {
         switch(currentState) {
             case STATE_MOVING:
                 if(_.sum(creep.carry) > 0) {
@@ -83,7 +83,7 @@ const utils = require("utils")
         }
     };
     
-    runMoving = function(creep, options) {
+var    runMoving = function(creep, options) {
 
         //var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState;
         
@@ -126,7 +126,7 @@ const utils = require("utils")
         }
     };
 
-    runMine = function (creep,options){
+var    runMine = function (creep,options){
         let target= creep.memory.target.pos.findClosestByRange(FIND_SOURCES);
         creep.harvest(target)
     }

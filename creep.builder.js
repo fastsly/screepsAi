@@ -13,33 +13,37 @@ const STATE_CONSTRUCT= 3;
 
 const utils = require("utils")
 
-run = function (creep, target){
-    if(!creep.memory.state) {
-        creep.memory.state = STATE_SPAWNING;
-    }
-    
-    if (creep.memory.target == null){
-        creep.memory.target = target.id
-    }
-    
-    switch(creep.memory.state) {
-    case STATE_SPAWNING:
-        runSpawning(creep, {nextState: STATE_MOVING});
-        break;
-    case STATE_MOVING:
-        runMoving(creep, {context: haulerContext});
-        break;
-    case STATE_GRAB_RESOURCE:
-        runGrabResource(creep, {nextState: STATE_MOVING});
-        break;
-    case STATE_CONSTRUCT:
-    
-            runConstruct(creep, {nextState: STATE_MOVING});
+var run = function (creep, target){
+    try{
+        if(!creep.memory.state) {
+            creep.memory.state = STATE_SPAWNING;
+        }
         
-        break;
+        if (creep.memory.target == null){
+            creep.memory.target = target.id
+        }
+        
+        switch(creep.memory.state) {
+        case STATE_SPAWNING:
+            runSpawning(creep, {nextState: STATE_MOVING});
+            break;
+        case STATE_MOVING:
+            runMoving(creep, {context: haulerContext});
+            break;
+        case STATE_GRAB_RESOURCE:
+            runGrabResource(creep, {nextState: STATE_MOVING});
+            break;
+        case STATE_CONSTRUCT:
+        
+                runConstruct(creep, {nextState: STATE_MOVING});
+            
+            break;
+        }
+    }catch(err){
+        console.log('i have an error in creep.buider'+err)
     }
 }
-runSpawning = function(creep) {
+var runSpawning = function(creep) {
 
 // "until it pops out of the spawn" -> when creep.spawning == false, we transition to the next state.
     if(!creep.spawning) {
@@ -49,7 +53,7 @@ runSpawning = function(creep) {
     }
 }
 
-haulerContext = function(creep, currentState) {
+var haulerContext = function(creep, currentState) {
     switch(currentState) {
         case STATE_MOVING:
             if(_.sum(creep.carry) > 0) {
@@ -60,7 +64,7 @@ haulerContext = function(creep, currentState) {
             }        
     }
 };
-runMoving = function(creep, options) {
+var runMoving = function(creep, options) {
 
     var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState;
     
@@ -103,7 +107,7 @@ runMoving = function(creep, options) {
     }
 };
 
-runGrabResource = function(creep,options){
+var runGrabResource = function(creep,options){
     if (creep.memory.pickup){
         creep.pickup(Game.getObjectById(creep.memory.grabTarget))
     }else{
@@ -119,7 +123,7 @@ runGrabResource = function(creep,options){
     
 };
 
-runConstruct = function(creep,options){
+var runConstruct = function(creep,options){
     creep.build(Game.getObjectById(creep.memory.target));
     if (_.sum(creep.carry) == 0){
         creep.memory.target= null;

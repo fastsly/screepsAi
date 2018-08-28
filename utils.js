@@ -1,31 +1,35 @@
-const resourceManager = require ('resourceManager');
+const resources = require ('resources');
 const creepFactory = require ('creepFactory')
 
-assign_container = function ( creep, options){
-    let containers = resourceManager.get_source_containers(creep.room)
-    
-    if (containers.length<2){
-        return "pickup"
-    }
-
-    if (Memory[creep.room.name].containers_creep_nr == undefined){
-        Memory[creep.room.name].containers_creep_nr = {}
-        for (let i of containers){
-            let temp = i.id
-            Memory[creep.room.name].containers_creep_nr[temp] = 0;
-        } 
-    }
-
-    bubbleSort(containers,creep);
-
-    for (let i of containers){
-        if ( _.sum(i.store) > creepFactory.getCarryCapacity) {
-            Memory[creep.room.name].containers_creep_nr[i.id] = Memory[creep.room.name].containers_creep_nr[i.id]+1;
-            return i.id;
+var assign_container = function ( creep, options){
+    try{
+        let containers = resources.get_source_containers(creep.room)
+        
+        if (containers.length<2){
+            return "pickup"
         }
-    }
 
-    return null
+        if (Memory[creep.room.name].containers_creep_nr == undefined){
+            Memory[creep.room.name].containers_creep_nr = {}
+            for (let i of containers){
+                let temp = i.id
+                Memory[creep.room.name].containers_creep_nr[temp] = 0;
+            } 
+        }
+
+        bubbleSort(containers,creep);
+
+        for (let i of containers){
+            if ( _.sum(i.store) > creepFactory.getCarryCapacity()) {
+                Memory[creep.room.name].containers_creep_nr[i.id] = Memory[creep.room.name].containers_creep_nr[i.id]+1;
+                return i.id;
+            }
+        }
+
+        return null
+    }catch(err){
+        console.log('i have an error in util/ assign container'+err)
+    }
 }
  
 function bubbleSort(arr,creep){

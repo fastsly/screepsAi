@@ -1,37 +1,40 @@
-const resourceManager = require('resourceManager');
+//const resourceManager = require('resourceManager');
 const workAssignment = require('workAssignment');
 
-var RoomControl = {
-    run: function (room) {
 
-        let hostiles = room.find(FIND_CREEPS, {
-            filter: (creep) => {
-                if (creep.my == false) {
-                    return true
-                } else {
-                    return false
+var run = function (room) {
+        try{
+            let hostiles = room.find(FIND_CREEPS, {
+                filter: (creep) => {
+                    if (creep.my == false) {
+                        return true
+                    } else {
+                        return false
+                    }
                 }
-            }
-        });
+            });
 
 
 
-        workAssignment.run(room,energyNeed(room), toRepair(room));
-        
+            workAssignment.run(room,energyNeed(room), toRepair(room));
+            
 
-        
-
-
+            
 
 
 
-        //console.log(JSON.stringify(upgraders))
-    },
 
-    defCon: function (room) {
+
+            //console.log(JSON.stringify(upgraders))
+        }catch(err){
+            console.log('i have an error in room control'+err)
+        }
+    }
+
+ var   defCon = function (room) {
         //implement what to do when hostile creep
-    },
-    energyNeed: function (room) {//set up prioritisation
+    }
+ var   energyNeed = function (room) {//set up prioritisation
         let constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
         let buildingsNeedEnergy = room.find(FIND_STRUCTURES, {
             filter: (structure) => {//subtract the current max carry capacity of carriers
@@ -58,9 +61,9 @@ var RoomControl = {
             constructionSite: constructionSites
         }
 
-    },
+    }
 
-    toRepair: function (room) {
+ var   toRepair= function (room) {
         let buildingsNeedRepair = room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.hits < structure.hitsMax
@@ -72,6 +75,10 @@ var RoomControl = {
         return buildingsNeedRepair;
 
     }
-};
 
-module.exports = RoomControl;
+
+module.exports = {
+    toRepair,
+    energyNeed,
+    run
+};

@@ -1,10 +1,10 @@
 
 
-getCarryCapacity = function(){
+var getCarryCapacity = function(){
     return 300
 }
 
-run = function (creepType, level){
+var run = function (creepType, level){
     // TOUGH          10
 	// MOVE           50
 	// CARRY          50
@@ -27,7 +27,7 @@ run = function (creepType, level){
 
     Upgrades a controller for 1 energy unit per tick.
         Controller level
-    1	—
+    1	â
     2	5 extensions (50 capacity)   250+300=550
     3	10 extensions (50 capacity)  500+300=800
     4	20 extensions (50 capacity)  1000+300=1300
@@ -165,5 +165,6 @@ run = function (creepType, level){
 }
 
 module.exports = {
-    getCarryCapacity
+    getCarryCapacity,
+    run
 }

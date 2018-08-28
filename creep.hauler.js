@@ -6,7 +6,7 @@ const STATE_GRAB_RESOURCE = 3;
 const utils = require("utils")
 
 
-    run = function (creep, target){
+var    run = function (creep, target){
         if(!creep.memory.state) {
             creep.memory.state = STATE_SPAWNING;
         }
@@ -32,7 +32,7 @@ const utils = require("utils")
             break;
         }
     }
-    runSpawning = function(creep) {
+var    runSpawning = function(creep) {
 
     // "until it pops out of the spawn" -> when creep.spawning == false, we transition to the next state.
         if(!creep.spawning) {
@@ -42,7 +42,7 @@ const utils = require("utils")
         }
     }
     
-    haulerContext = function(creep, currentState) {
+var    haulerContext = function(creep, currentState) {
         switch(currentState) {
             case STATE_MOVING:
                 if(_.sum(creep.carry) > 0) {
@@ -58,7 +58,7 @@ const utils = require("utils")
         }
     };
     
-    runMoving = function(creep, options) {
+var    runMoving = function(creep, options) {
 
         var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState;
         
@@ -101,7 +101,7 @@ const utils = require("utils")
         }
     };
 
-    runGrabResource = function(creep,options){
+var    runGrabResource = function(creep,options){
         if (creep.memory.pickup){
             creep.pickup(Game.getObjectById(creep.memory.grabTarget))
         }else{
@@ -117,7 +117,7 @@ const utils = require("utils")
         
     };
 
-    runDepositResource = function(creep,options){
+var    runDepositResource = function(creep,options){
         creep.transfer(Game.getObjectById(creep.memory.target),RESOURCE_ENERGY);
         if (_.sum(creep.carry) == 0){
             creep.memory.target= null;
