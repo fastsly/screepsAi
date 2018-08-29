@@ -37,8 +37,8 @@ var run = function (creepType, level, room){
     8	60 extensions (200 capacity)
     */
     let spawn = room.find(FIND_MY_SPAWNS)
-   let abilities
-   let id = Game.time
+    let abilities
+    let id = Game.time
     switch(creepType) {
         case 'miner':
             if(level <= 1) {
@@ -163,7 +163,7 @@ var run = function (creepType, level, room){
             abilities = [MOVE, MOVE, MOVE, HEAL, MOVE];
         break;
     }
-    console.log('Spawn level ' + level + ' ' + creepType);
+    console.log('Spawn level ' + level + ' ' + creepType+'in room '+room.name);
     spawn[0].spawnCreep(abilities, creepType + '-' + id, {memory: {role: creepType,target: null}});
 }
 

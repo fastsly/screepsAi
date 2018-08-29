@@ -154,10 +154,12 @@ var run = function (room,energyNeed, toRepair ){
     }
     
     var runHaulers = function (energyNeed,haulers,defCon){
-        let i=0;
-        for(let creep of haulers){
-            creepHauler.run(creep,energyNeed[i])
-            i++
+        if (haulers.length>0){
+            let i=0;
+            for(let creep of haulers){
+                creepHauler.run(creep,energyNeed[i])
+                i++
+            }
         }
     }
     
