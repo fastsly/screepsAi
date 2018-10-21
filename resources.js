@@ -61,8 +61,8 @@ function get_source_containers(room) {
     // Go through all sources and all nearby containers, and pick one that is not
     // claimed by another harvester2 for now.
     // TODO: Prefer to pick one at a source that isn't already claimed.
-    let retval;
-
+    var retval = [];
+    try{
     source_container_search:
     for (let source of room_sources) {
         let nearby_containers =
@@ -76,8 +76,11 @@ function get_source_containers(room) {
             retval.push(nc.id)
         } // nearby_containers
     } // room_sources
-
+    
     return retval;
+    }catch(err){
+            console.log("i have error in resources get source container "+err)
+        }
 } // num_source_containers
 // Gets enemy information for this room aggregated over time.
 // Stores data in Memory:
@@ -356,4 +359,5 @@ module.exports = {
     summarize_room,
     summarize_rooms,
     get_source_containers,
+    count_source_containers
 };

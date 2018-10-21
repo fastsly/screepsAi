@@ -84,11 +84,13 @@ var run = function (room,energyNeed, toRepair ){
             }
     */      try{
             let sources = room.find(FIND_SOURCES);
-            if (room.energyAvailable<=300 && room.controller.level==1){
+            console.log("Spawn energy in room "+room.name+" is "+room.energyAvailable)
+            console.log("buidings need energy is "+JSNON.stringify(energyNeed.needEnergy)))
+            if (room.energyAvailable<=300 ){
                 if (miners.length < 1){
                     creepFactory.run("miner",1,room);
                 }else
-                if (haulers.length < 1){
+                if (haulers.length < 1 && miners.length>0){
                     creepFactory.run('carry',1,room);
                 }else
                 if (miners.length <3){
@@ -97,11 +99,11 @@ var run = function (room,energyNeed, toRepair ){
                 if(haulers.length<3){
                     creepFactory.run('carry',1,room);
                 }else
-                if(upgraders.length < 3){
+                if(upgraders.length < 1){
                     creepFactory.run("upgrader",1,room);
                 }else
                 if(energyNeed.constructionSite){
-                    if(builders.length<energyNeed.constructionSite.length && builders.length<3){
+                    if(/*builders.length<energyNeed.constructionSite.length &&*/ builders.length<2){
                         creepFactory.run("builder",1,room);
                     }
                 }else
@@ -109,7 +111,7 @@ var run = function (room,energyNeed, toRepair ){
                     creepFactory.run("repair",1,room);
                 }
             }else
-            if(room.energyAvailable<=550 && room.controller.level==2){
+            if(room.energyAvailable<=550 ){
                 if (miners.length < 1){
                     creepFactory.run("miner",2,room);
                 }else
@@ -135,13 +137,27 @@ var run = function (room,energyNeed, toRepair ){
                 }
             }
             }catch(err){
-                console.log('i have an error at creepfactory call in work assignment'+err)
+                console.log('i have an error at creepfactory call in work assignment '+err)
             }    
 
             try{
-            runHaulers(energyNeed.needEnergy,haulers)
+                try{
+                runMiners(miners)
+                }
+                catch(err){
+                    console.log('i have an error at runminers  call in work assignment '+err)
+                }
+                try{
+                    
+                runHaulers(haulers,energyNeed.needEnergy)
+                
+                }
+                catch(err){
+                    console.log('i have an error at runhaulers  call in work assignment '+err)
+                }
+            
             runBuilders(energyNeed.constructionSite,builders)
-            runMiners(miners)
+                
             runUpgraders(upgraders)
             runRepairers(repairers,toRepair)
             }catch(err){
@@ -153,20 +169,28 @@ var run = function (room,energyNeed, toRepair ){
         }    
     }
     
-    var runHaulers = function (energyNeed,haulers,defCon){
+    var runHaulers = function (haulers,energyNeed,defCon){
         if (haulers.length>0){
             let i=0;
-            for(let creep of haulers){
-                creepHauler.run(creep,energyNeed[i])
-                i++
+            if (energyNeed.length>1){
+                for(let creep of haulers){
+                    creepHauler.run(creep,energyNeed[i])
+                    i++
+                }
+            }else{
+                for(let creep of haulers){
+                    creepHauler.run(creep,energyNeed[0])
+                    
+                }
             }
+            
         }
     }
     
     var runBuilders = function(constSites,builders, defCon){
         
         for(let creep of builders){
-            creepBuilder.run(creep,constSites[0])
+            creepBuilder.run(creep,constSites[0],constSites)
         }
     }
     

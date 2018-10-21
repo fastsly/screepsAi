@@ -27,7 +27,7 @@ var run = function (creepType, level, room){
 
     Upgrades a controller for 1 energy unit per tick.
         Controller level
-    1	â
+    1	Ã¢ÂÂ
     2	5 extensions (50 capacity)   250+300=550
     3	10 extensions (50 capacity)  500+300=800
     4	20 extensions (50 capacity)  1000+300=1300
@@ -163,7 +163,7 @@ var run = function (creepType, level, room){
             abilities = [MOVE, MOVE, MOVE, HEAL, MOVE];
         break;
     }
-    console.log('Spawn level ' + level + ' ' + creepType+'in room '+room.name);
+    console.log('Spawn level ' + level + ' ' + creepType+' in room '+room.name);
     spawn[0].spawnCreep(abilities, creepType + '-' + id, {memory: {role: creepType,target: null}});
 }
 

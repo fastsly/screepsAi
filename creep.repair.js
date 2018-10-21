@@ -96,7 +96,7 @@ var    runMoving = function(creep, options) {
             var pos = Game.getObjectById(creep.memory.target).pos
         }
         // Has the creep arrived?
-        if(creep.pos == pos) {
+        if(creep.pos.inRangeTo (pos,1)) {
             creep.memory.state = transitionState;
             run(creep);
             return;

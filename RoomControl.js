@@ -14,8 +14,8 @@ var run = function (room) {
                 }
             });
 
-
-
+            console.log("Source containers are "+resources.count_source_containers(room))
+            if (!Memory[room.name]){Memory[room.name] = {}}
             workAssignment.run(room,energyNeed(room), toRepair(room));
             
 
@@ -40,28 +40,30 @@ var run = function (room) {
         var buildingsAll = current_room.find(FIND_MY_STRUCTURES);
         
         var buildings = _.filter(buildingsAll, (structure) => {//subtract the current max carry capacity of carriers
-                if ((structure.structureType == STRUCTURE_TOWER 
-                || structure.structureType == STRUCTURE_SPAWN 
-                || structure.structureType == STRUCTURE_EXTENSION 
-                || structure.structureType == STRUCTURE_CONTAINER)) {
-                    if (structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] < (structure.storeCapacity - 300)) {
-                        for (var kilo of resources.get_source_containers(room)()) {
-                            if (kilo == structure.id) {
-                                return false
-                            } else {
-                                return true
-                            }
+            if ((structure.structureType == STRUCTURE_TOWER 
+            || structure.structureType == STRUCTURE_SPAWN 
+            || structure.structureType == STRUCTURE_EXTENSION) && structure.energy != structure.energyCapacity ) {
+                
+                    return true
+                
+            }else{
+                if (structure.structureType == STRUCTURE_CONTAINER && _sum(structure.store)!= structure.storeCapacity){
+                let found = false
+                    for (var kilo of resources.get_source_containers(current_room)) {
+                        
+                        if (kilo == structure.id) {
+                            //console.log("containers var at energy need func is "+structure.id+ ' and source is '+kilo)
+                            found = true
                         }
-                    } else
-                    if (structure.structureType == STRUCTURE_TOWER 
-                        || structure.structureType == STRUCTURE_SPAWN 
-                        || structure.structureType == STRUCTURE_EXTENSION ){
-
+                    }
+                    if (!found){
+                        return true
                     }
                 }
+            }
 
-            })
-        
+        })
+        //console.log("buildings var at energy need func is "+buildings)
         return {
             needEnergy: buildings,
             constructionSite: constructionSites
@@ -71,7 +73,7 @@ var run = function (room) {
         }
     }
 
- var   toRepair= function (room) {
+var   toRepair= function (room) {
         let buildingsNeedRepair = room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.hits < structure.hitsMax
