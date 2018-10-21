@@ -72,7 +72,7 @@ var    haulerContext = function(creep, currentState) {
 var    runMoving = function(creep, options) {
 
         var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState;
-        
+        let pos
         // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
         //var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
         //meybe extract this v
@@ -88,7 +88,7 @@ var    runMoving = function(creep, options) {
                 if(temp_container){                     //when we have containers
                     creep.memory.pickup = false;
                         creep.memory.grabTarget=temp_container.id
-                        var pos = Game.getObjectById(creep.memory.grabTarget).pos
+                        pos = Game.getObjectById(creep.memory.grabTarget).pos
                 }else{                                              //when we dont have containers
                     
                     creep.memory.pickup = true;
@@ -98,19 +98,19 @@ var    runMoving = function(creep, options) {
                     }}*/)
                     let rand = Math.floor(Math.random() * (temp_pickup.length-1));
                     creep.memory.grabTarget=temp_pickup[rand].id;
-                    var pos = Game.getObjectById(creep.memory.grabTarget).pos
+                    pos = Game.getObjectById(creep.memory.grabTarget).pos
                     console.log("we enter 4 and temp pickup is "+ JSON.stringify(temp_pickup)+" and pos is "+pos)
                 }
             }else{                                                  //when we know the grabtarget
                 if (Game.getObjectById(creep.memory.target)!= null){
-                    var pos = Game.getObjectById(creep.memory.target).pos
+                    pos = Game.getObjectById(creep.memory.target).pos
                     }else{
                     creep.memory.target = null
                     }
             }
         }else{                                                      //when we go for depositing
             if (Game.getObjectById(creep.memory.target)!= null){
-                var pos = Game.getObjectById(creep.memory.target).pos
+                pos = Game.getObjectById(creep.memory.target).pos
             }else{
                 creep.memory.target = null
             }
@@ -130,6 +130,12 @@ var    runGrabResource = function(creep,options){
         if (creep.memory.pickup){
             if (Game.getObjectById(creep.memory.grabTarget)) {
                 creep.pickup(Game.getObjectById(creep.memory.grabTarget))
+                if (_.sum(creep.carry) === 0 ) {
+        
+                    creep.memory.grabTarget = null
+                    creep.memory.state = options.nextState
+                    run(creep)
+                }
                 } else {
                     creep.memory.grabTarget= null
                     creep.memory.state = STATE_MOVING

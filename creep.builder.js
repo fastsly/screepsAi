@@ -33,16 +33,16 @@ var run = function (creep, target, constSites) {
         break
       case STATE_MOVING:
         try {
-          runMoving(creep, { context: haulerContext })
+          runMoving(creep, target, constSites, { context: haulerContext })
         } catch (err) {
           console.log('error in creep builder at runmoving ' + err)
         }
         break
       case STATE_GRAB_RESOURCE:
-        runGrabResource(creep, { nextState: STATE_MOVING })
+        runGrabResource(creep, target, constSites, { nextState: STATE_MOVING })
         break
       case STATE_CONSTRUCT:
-        runConstruct(creep, { nextState: STATE_MOVING }, constSites)
+        runConstruct(creep, target, constSites, { nextState: STATE_MOVING }, constSites)
         break
     }
   } catch (err) {
@@ -69,7 +69,7 @@ var haulerContext = function (creep, currentState) {
       }        
   }
 }
-var runMoving = function (creep, options) {
+var runMoving = function (creep, target, constSites, options) {
   let pos
   var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState
   // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
@@ -123,20 +123,20 @@ var runMoving = function (creep, options) {
   // Has the creep arrived?
   if (creep.pos.inRangeTo(pos, 1)) {
     creep.memory.state = transitionState
-    run(creep)
+    run(creep, target, constSites)
   } else {
     creep.moveTo(pos)
   }
 }
 
-var runGrabResource = function (creep, options) {
+var runGrabResource = function (creep, target, constSites, options) {
   if (creep.memory.pickup) {
     if (Game.getObjectById(creep.memory.grabTarget)) {
       creep.pickup(Game.getObjectById(creep.memory.grabTarget))
     } else {
       creep.memory.grabTarget = null
       creep.memory.state = STATE_MOVING
-      run(creep)
+      run(creeptarget, constSites)
     }
   } else {
     creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)
@@ -148,8 +148,8 @@ var runGrabResource = function (creep, options) {
   }
 }
 // TODO: make it so it doesnt just drop
-var runConstruct = function (creep, options) {
-  let constSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES)
+var runConstruct = function (creep, target, constSites, options) {
+  //let constSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES)
   let constIds = []
   for (let x of constSites) {
     constIds.push(x.id)
@@ -160,13 +160,13 @@ var runConstruct = function (creep, options) {
     creep.memory.target = null
     creep.drop(RESOURCE_ENERGY)
     creep.memory.state = options.nextState
-    run(creep)
+    run(creep, target, constSites)
   }
 
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null
     creep.memory.state = options.nextState
-    run(creep)
+    run(creep, target, constSites)
   }
 }
 module.exports = {

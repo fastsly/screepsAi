@@ -85,7 +85,7 @@ var run = function (room,energyNeed, toRepair ){
     */      try{
             let sources = room.find(FIND_SOURCES);
             console.log("Spawn energy in room "+room.name+" is "+room.energyAvailable)
-            console.log("buidings need energy is "+JSNON.stringify(energyNeed.needEnergy)))
+            console.log("buidings need energy is "+JSON.stringify(energyNeed.needEnergy))
             if (room.energyAvailable<=300 ){
                 if (miners.length < 1){
                     creepFactory.run("miner",1,room);
