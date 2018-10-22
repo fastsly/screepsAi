@@ -14,6 +14,7 @@ const STATE_GRAB_RESOURCE = 3
 const utils = require('utils')
 
 var run = function (creep, target) {
+  // console.log('The status at the beggining ' + creep.memory.state)
   if (!creep.memory.state) {
     creep.memory.state = STATE_SPAWNING
   }
@@ -53,10 +54,11 @@ var runSpawning = function (creep) {
 var haulerContext = function (creep, currentState) {
   switch (currentState) {
     case STATE_MOVING:
-      if (_.sum(creep.carry) > 0) {
+      if (_.sum(creep.carry) === creep.carryCapacity) {
         return { nextState: STATE_UPGRADE }
       } else {
         // or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
+        // console.log('somehow it is not empty while ' + _.sum(creep.carry))
         return { nextState: STATE_GRAB_RESOURCE }
       }
   }
@@ -69,14 +71,14 @@ var runMoving = function (creep, options) {
   // var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
   // meybe extract this v
   if (transitionState === STATE_GRAB_RESOURCE) {
-    console.log('we enter 1')
+    // console.log('we enter 1')
     /* if (!creep.memory.grabTarget){
                 creep.memory.grabTarget = null
                 console.log("we enter 2")
             } */
     if (creep.memory.grabTarget == null) { // when we  dont have a grabtarget
       let temp_container = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_CONTAINER })
-      console.log('we enter 3')
+      // console.log('we enter 3')
       if (temp_container) { // when we have containers
         creep.memory.pickup = false
         creep.memory.grabTarget = temp_container.id
@@ -90,13 +92,13 @@ var runMoving = function (creep, options) {
         let rand = Math.floor(Math.random() * (temp_pickup.length - 1))
         creep.memory.grabTarget = temp_pickup[rand].id
         pos = Game.getObjectById(creep.memory.grabTarget).pos
-        console.log('we enter 4 and temp pickup is ' + JSON.stringify(temp_pickup) + ' and pos is ' + pos)
+        // console.log('we enter 4 and temp pickup is ' + JSON.stringify(temp_pickup) + ' and pos is ' + pos)
       }
     } else { // when we know the grabtarget
-      if (Game.getObjectById(creep.memory.target) !== null) {
-        pos = Game.getObjectById(creep.memory.target).pos
+      if (Game.getObjectById(creep.memory.grabTarget) !== null) {
+        pos = Game.getObjectById(creep.memory.grabTarget).pos
       } else {
-        creep.memory.target = null
+        creep.memory.grabTarget = null
       }
     }
   } else { // when we go for depositing
@@ -109,8 +111,10 @@ var runMoving = function (creep, options) {
   // Has the creep arrived?
   if (creep.pos.inRangeTo(pos, 1)) {
     creep.memory.state = transitionState
+    // console.log('The status at the end1 ' + creep.memory.state)
     run(creep)
   } else {
+    // console.log('The status at the end2 ' + creep.memory.state)
     creep.moveTo(pos)//, {reusePath: 50})
   }
 }
@@ -119,14 +123,16 @@ var runGrabResource = function (creep, options) {
   if (creep.memory.pickup) {
     if (Game.getObjectById(creep.memory.grabTarget)) {
       creep.pickup(Game.getObjectById(creep.memory.grabTarget))
-      if (_.sum(creep.carry) === 0) {
+      if (_.sum(creep.carry) < creep.carryCapacity) {
         creep.memory.grabTarget = null
         creep.memory.state = options.nextState
+        // console.log('The status at the end3 ' + creep.memory.state)
         run(creep)
       }
     } else {
       creep.memory.grabTarget = null
       creep.memory.state = STATE_MOVING
+      // console.log('The status at the end4 ' + creep.memory.state)
       run(creep)
     }
   } else {
@@ -135,6 +141,7 @@ var runGrabResource = function (creep, options) {
   if (_.sum(creep.carry) === creep.carryCapacity) {
     creep.memory.grabTarget = null
     creep.memory.state = options.nextState
+    // console.log('The status at the end5 ' + creep.memory.state)
     run(creep)
   }
 }
@@ -144,6 +151,7 @@ var runUpgrade = function (creep, options) {
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null
     creep.memory.state = options.nextState
+    // console.log('The status at the end6 ' + creep.memory.state)
     run(creep)
   }
 }

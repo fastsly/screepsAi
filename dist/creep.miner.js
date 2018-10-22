@@ -49,7 +49,7 @@ var runSpawning = function (creep) {
 var runMoving = function (creep, options) {
   // TODO: rethink where to fuckin put this and also rework the hascontainer thing
   // try{
-
+  let pos
   if (creep.memory.target == null) {
     // we initialize the miner switches for source controller
     console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
@@ -79,11 +79,13 @@ var runMoving = function (creep, options) {
 
     if (creep.memory.target == null) { // we assign miner to a container
       let targets = resources.get_source_containers(creep.room)
+      let filteredTargets
       // console.log('in miners targets is '+targets)
       if (targets.length > 0) {
         if (targets !== undefined) { // if there is a free container assign it to creep and set switch for container
+          console.log('Ladies and gentleman we have containers')
           if (targets.length > 1) {
-            let filteredTargets = targets.filter(function (container) { // only containers that dont have a miner
+            filteredTargets = targets.filter(function (container) { // only containers that dont have a miner
               if (Memory[creep.room.name].source_containers_has_miner[container] === false) {
                 return true
               } else {
@@ -96,11 +98,19 @@ var runMoving = function (creep, options) {
             Memory[creep.room.name].source_containers_has_miner[filteredTargets[0]] = true
             console.log('i actuallly do this but i dont switch memory register to true')
           } else {
+            console.log('we finally got here and ' + targets + ' and ' + Memory[creep.room.name].source_containers_has_miner[targets])
             if (Memory[creep.room.name].source_containers_has_miner[targets] === false) {
+              console.log('we finally got here')
               creep.memory.containers = true
               creep.memory.target = targets
               Memory[creep.room.name].source_containers_has_miner[targets] = true
             }
+            let temp = creep.room.find(FIND_FLAGS, {
+              filter: (object) => {
+                if (object.name === 'Flag1') { return object }
+              } }
+            )
+            pos = temp[0].pos
           }
         }
       } else {
@@ -111,8 +121,8 @@ var runMoving = function (creep, options) {
     }
 
     // runSpawning (creep);
-  } else{
-    var pos = Game.getObjectById(creep.memory.target).pos
+  } else {
+    pos = Game.getObjectById(creep.memory.target).pos
   }
   // }
   // catch(err){

@@ -14,6 +14,7 @@ const STATE_CONSTRUCT = 3
 const utils = require('utils')
 
 var run = function (creep, target, constSites) {
+  // console.log('The status at the beggining ' + creep.memory.state)
   try {
     if (!creep.memory.state) {
       creep.memory.state = STATE_SPAWNING
@@ -79,6 +80,7 @@ var runMoving = function (creep, target, constSites, options) {
     if (creep.memory.grabTarget === null) { // when we  dont have a grabtarget
       let temp_container = utils.assign_container(creep)
       let temp_pickup
+      // console.log('tempcontainer is ' + temp_container)
       if (temp_container !== 'pickup') { // when we have containers
         creep.memory.pickup = false
         if (temp_container) { // when theyre not empty
@@ -110,6 +112,7 @@ var runMoving = function (creep, target, constSites, options) {
         // console.log(creep.name+' we have memory grabtarget')
       } else {
         creep.memory.grabTarget = null
+        // console.log('The status at the end1 ' + creep.memory.state)
         run(creep)
       }
     }
@@ -123,6 +126,7 @@ var runMoving = function (creep, target, constSites, options) {
   // Has the creep arrived?
   if (creep.pos.inRangeTo(pos, 1)) {
     creep.memory.state = transitionState
+    // console.log('The status at the end2 ' + creep.memory.state)
     run(creep, target, constSites)
   } else {
     creep.moveTo(pos)
@@ -136,6 +140,7 @@ var runGrabResource = function (creep, target, constSites, options) {
     } else {
       creep.memory.grabTarget = null
       creep.memory.state = STATE_MOVING
+      // console.log('The status at the end3 ' + creep.memory.state)
       run(creep, target, constSites)
     }
   } else {
@@ -144,6 +149,7 @@ var runGrabResource = function (creep, target, constSites, options) {
   if (_.sum(creep.carry) === creep.carryCapacity) {
     creep.memory.grabTarget = null
     creep.memory.state = options.nextState
+    // console.log('The status at the end4 ' + creep.memory.state)
     run(creep)
   }
 }
@@ -154,18 +160,26 @@ var runConstruct = function (creep, target, constSites, options) {
   for (let x of constSites) {
     constIds.push(x.id)
   }
-  if (constSites.indexOf(creep.memory.target) > -1) {
+  if (constIds.indexOf(creep.memory.target) > -1) {
     creep.build(Game.getObjectById(creep.memory.target))
   } else {
     creep.memory.target = null
     creep.drop(RESOURCE_ENERGY)
     creep.memory.state = options.nextState
+    // console.log('The status at the end5 ' + creep.memory.state)
+    run(creep, target, constSites)
+  }
+  if (!creep.pos.inRangeTo( Game.getObjectById(creep.memory.target).pos, 1)) {
+    creep.memory.target = null
+    creep.memory.state = options.nextState
+    // console.log('The status at the end6 ' + creep.memory.state)
     run(creep, target, constSites)
   }
 
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null
     creep.memory.state = options.nextState
+    // console.log('The status at the end6 ' + creep.memory.state)
     run(creep, target, constSites)
   }
 }

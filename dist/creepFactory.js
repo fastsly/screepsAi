@@ -1,5 +1,5 @@
 var getCarryCapacity = function () {
-  return 300
+  return 50
 }
 
 var run = function (creepType, level, room) {

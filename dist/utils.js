@@ -16,8 +16,10 @@ var assign_container = function (creep, options) {
     } else {
       return 'pickup'
     }
+
     try {
       if (!Memory[creep.room.name]) { Memory[creep.room.name] = { } }
+
       if (_.isEmpty(Memory[creep.room.name].containers_creep_nr)) {
         // console.log("we enter 1.a")
         Memory[creep.room.name].containers_creep_nr = {}
@@ -43,8 +45,8 @@ var assign_container = function (creep, options) {
 
     try {
       for (let i of containers) {
-        if (_.sum(Game.getObjectById(i).store) > creepFactory.getCarryCapacity()) {
-          console.log('we found a container i ' + JSON.stringify(i))
+        if (_.sum(Game.getObjectById(i).store) > creep.carryCapacity) {
+          // console.log('we found a container i ' + JSON.stringify(i))
           Memory[creep.room.name].containers_creep_nr[i] = Memory[creep.room.name].containers_creep_nr[i] + 1
           return i
         }
