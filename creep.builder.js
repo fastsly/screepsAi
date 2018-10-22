@@ -66,7 +66,7 @@ var haulerContext = function (creep, currentState) {
       } else {
         // or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
         return { nextState: STATE_GRAB_RESOURCE }
-      }        
+      }
   }
 }
 var runMoving = function (creep, target, constSites, options) {
@@ -87,7 +87,7 @@ var runMoving = function (creep, target, constSites, options) {
         } else { // when theyre empty
           pos = Game.flags.Flag1.pos
         }
-      } else {                                              //when we dont have containers
+      } else { // when we dont have containers
         creep.memory.pickup = true
         temp_pickup = creep.room.find(FIND_DROPPED_RESOURCES /* ,{
                     filter:(object)=>{
@@ -98,13 +98,13 @@ var runMoving = function (creep, target, constSites, options) {
           creep.memory.grabTarget = temp_pickup[rand].id
           pos = Game.getObjectById(creep.memory.grabTarget).pos
         } else {
-          pos = creep.room.find(FIND_FLAGS,{
+          pos = creep.room.find(FIND_FLAGS, {
             filter: (object) => {
               if (object.name === 'Flag1') { return object }
             } })
         }
       }
-    } else {                                                  //when we know the grabtarget
+    } else { // when we know the grabtarget
       if (Game.getObjectById(creep.memory.grabTarget)) {
         pos = Game.getObjectById(creep.memory.grabTarget).pos
         // console.log(creep.name+' we have memory grabtarget')
@@ -113,7 +113,7 @@ var runMoving = function (creep, target, constSites, options) {
         run(creep)
       }
     }
-  } else {                                                      //when we go for depositing
+  } else { // when we go for depositing
     if (Game.getObjectById(creep.memory.target) !== null) {
       pos = Game.getObjectById(creep.memory.target).pos
     } else {
@@ -136,20 +136,20 @@ var runGrabResource = function (creep, target, constSites, options) {
     } else {
       creep.memory.grabTarget = null
       creep.memory.state = STATE_MOVING
-      run(creeptarget, constSites)
+      run(creep, target, constSites)
     }
   } else {
     creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)
   }
   if (_.sum(creep.carry) === creep.carryCapacity) {
-    creep.memory.grabTarget= null
+    creep.memory.grabTarget = null
     creep.memory.state = options.nextState
     run(creep)
   }
 }
 // TODO: make it so it doesnt just drop
 var runConstruct = function (creep, target, constSites, options) {
-  //let constSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES)
+  // let constSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES)
   let constIds = []
   for (let x of constSites) {
     constIds.push(x.id)

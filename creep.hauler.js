@@ -51,7 +51,7 @@ var haulerContext = function (creep, currentState) {
       } else {
         // or perhaps you're very fancy and you have a function that dynamically assigns your haulers...
         return { nextState: STATE_GRAB_RESOURCE }
-      } 
+      }
   }
 }
 
@@ -82,7 +82,7 @@ var runMoving = function (creep, target, options) {
             }
           } else { // when we dont have containers
             creep.memory.pickup = true
-            temp_pickup = creep.room.find(FIND_DROPPED_RESOURCES 
+            temp_pickup = creep.room.find(FIND_DROPPED_RESOURCES
               /*, {
             filter:(object)=>{
                                 if(object.amount>=creep.carryCapacity) {return object}
@@ -161,10 +161,10 @@ var runGrabResource = function (creep, options) {
       return
     }
   } else {
-    creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)       
+    creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)
   }
   if (_.sum(creep.carry) === creep.carryCapacity) {
-    creep.memory.grabTarget= null
+    creep.memory.grabTarget = null
     creep.memory.state = options.nextState
     run(creep)
   }
@@ -183,7 +183,7 @@ var runDepositResource = function (creep, options) {
   } else {
     if (target.structureType === STRUCTURE_TOWER || target.structureType === STRUCTURE_SPAWN || target.structureType === STRUCTURE_EXTENSION) {
       if (target.energy === target.energyCapacity) {
-        creep.memory.target= null
+        creep.memory.target = null
         creep.memory.state = options.nextState
         return
       } else {
