@@ -50,6 +50,7 @@ var runMoving = function (creep, options) {
   // TODO: rethink where to fuckin put this and also rework the hascontainer thing
   // try{
   let pos
+  let targets = resources.get_source_containers(creep.room)
   if (creep.memory.target == null) {
     // we initialize the miner switches for source controller
     console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
@@ -63,13 +64,23 @@ var runMoving = function (creep, options) {
     }
 
     if (_.isEmpty(Memory[creep.room.name].source_containers_has_miner)) {
-      let targets = resources.get_source_containers(creep.room)
       if (targets) {
         console.log('ive found my targets ' + targets)
         for (let i of targets) {
-          let temp = i
-          Memory[creep.room.name].source_containers_has_miner[temp] = false
+          Memory[creep.room.name].source_containers_has_miner[i] = false
         }
+      }
+    }
+
+    for (let j in Memory[creep.room.name].source_containers_has_miner) {
+      var found = false
+      for (let i of targets) {
+        if (i === j) {
+          found = true
+        }
+      }
+      if (!found) {
+        delete Memory[creep.room.name].source_containers_has_miner[ j ]
       }
     }
 
