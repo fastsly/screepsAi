@@ -1,5 +1,6 @@
 const resources = require('resources')
 const workAssignment = require('workAssignment')
+const armyGeneral = require('armyGeneral')
 
 var run = function (room) {
   try {
@@ -16,7 +17,7 @@ var run = function (room) {
     console.log('Source containers are ' + resources.count_source_containers(room))
     if (!Memory[room.name]) { Memory[room.name] = { } }
     workAssignment.run(room, energyNeed(room), toRepair(room))
-
+    armyGeneral.run(room, defCon())
     // console.log(JSON.stringify(upgraders))
   } catch (err) {
     console.log('i have an error in room control' + err)
@@ -25,6 +26,7 @@ var run = function (room) {
 
 var defCon = function (room) {
   // implement what to do when hostile creep
+  return 3
 }
 var energyNeed = function (current_room) { // set up prioritisation
   try {

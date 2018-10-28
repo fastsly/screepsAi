@@ -57,6 +57,7 @@ var haulerContext = function (creep, currentState) {
 
 var runMoving = function (creep, target, options) {
   var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState
+  let flag = false
   // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
   // var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
   // meybe extract this v
@@ -125,10 +126,20 @@ var runMoving = function (creep, target, options) {
   // console.log(creep.name+' we go to '+JSON.stringify(pos))
   try {
     // Has the creep arrived?
+    if (pos === undefined || pos === null) {
+      let temp = creep.room.find(FIND_FLAGS, {
+        filter: (object) => {
+          if (object.name === 'Flag1') { return object }
+        } })
+      pos = temp[0].pos
+      flag = true
+    }
 
-    if (target) {
+    if (target || pos) {
       if (creep.pos.inRangeTo(pos, 1)) {
-        creep.memory.state = transitionState
+        if (!flag) {
+          creep.memory.state = transitionState
+        }
         // run(creep);
         return
       } else {
@@ -143,8 +154,6 @@ var runMoving = function (creep, target, options) {
         // console.log(JSON.stringify(creep, null, 2))
         // creep.withdraw(Game.getObjectById(creep.memory.grabTarget),RESOURCE_ENERGY)
       }
-    } else {
-
     }
   } catch (e) {
     console.log('in creep.haulers for ' + creep.name + ' move the error is: ' + e.message)

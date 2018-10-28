@@ -19,8 +19,38 @@ var run = function (creep) {
     creep.memory.state = STATE_SPAWNING
   }
   if (creep.ticksToLive < 4) {
-    Memory[creep.room.name].source_containers_has_miner[creep.memory.target] = false
+    if (creep.memory.target) {
+      Memory[creep.room.name].source_containers_has_miner[creep.memory.target] = false
+    }
   }
+  let targets = resources.get_source_containers(creep.room)
+  if (_.size(Memory[creep.room.name].source_containers_has_miner) !== targets.length) {
+    for (let i of targets) {
+      var found = false
+      for (let j in Memory[creep.room.name].source_containers_has_miner) {
+        if (i === j) {
+          found = true
+        }
+      }
+      if (!found) {
+        Memory[creep.room.name].source_containers_has_miner[ i ] = false
+      }
+    }
+  }
+  if (Memory[creep.room.name].source_containers_has_miner) {
+    for (let j in Memory[creep.room.name].source_containers_has_miner) {
+      var found = false
+      for (let i of targets) {
+        if (i === j) {
+          found = true
+        }
+      }
+      if (!found) {
+        delete Memory[creep.room.name].source_containers_has_miner[ j ]
+      }
+    }
+  }
+
   try {
     switch (creep.memory.state) {
       case STATE_SPAWNING:
@@ -51,6 +81,7 @@ var runMoving = function (creep, options) {
   // try{
   let pos
   let targets = resources.get_source_containers(creep.room)
+  // if (Memory[creep.room.name].source_containers_has_miner.length !== targets.length)
   if (creep.memory.target == null) {
     // we initialize the miner switches for source controller
     console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
@@ -69,18 +100,6 @@ var runMoving = function (creep, options) {
         for (let i of targets) {
           Memory[creep.room.name].source_containers_has_miner[i] = false
         }
-      }
-    }
-
-    for (let j in Memory[creep.room.name].source_containers_has_miner) {
-      var found = false
-      for (let i of targets) {
-        if (i === j) {
-          found = true
-        }
-      }
-      if (!found) {
-        delete Memory[creep.room.name].source_containers_has_miner[ j ]
       }
     }
 
@@ -103,13 +122,13 @@ var runMoving = function (creep, options) {
                 return false
               }
             })
-            console.log('in miners targets is ' + filteredTargets)
+            console.log('in miners targets is ' + filteredTargets + ' and source containers are ' + JSON.stringify(targets))
             creep.memory.containers = true
             creep.memory.target = filteredTargets[0]
             Memory[creep.room.name].source_containers_has_miner[filteredTargets[0]] = true
             console.log('i actuallly do this but i dont switch memory register to true')
           } else {
-            console.log('we finally got here and ' + targets + ' and ' + Memory[creep.room.name].source_containers_has_miner[targets])
+            console.log('we finally got here and ' + targets + ' and ' + Memory[creep.room.name].source_containers_has_miner[targets] + ' and source containers are ' + targets)
             if (Memory[creep.room.name].source_containers_has_miner[targets] === false) {
               console.log('we finally got here')
               creep.memory.containers = true
@@ -140,6 +159,14 @@ var runMoving = function (creep, options) {
   //    console.log("ive caught an error in miners runspawn "+err)
   // }
   // Has the creep arrived?
+  if (pos === undefined || pos === null) {
+    let temp = creep.room.find(FIND_FLAGS, {
+      filter: (object) => {
+        if (object.name === 'Flag1') { return object }
+      } })
+    pos = temp[0]
+  }
+
   if (creep.memory.containers) {
     if (creep.pos.inRangeTo(pos, 0)) {
       creep.memory.state = options.nextState

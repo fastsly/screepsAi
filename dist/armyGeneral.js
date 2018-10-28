@@ -1,12 +1,19 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('armyGeneral');
- * mod.thing == 'a thing'; // true
- */
+const structureTower = require('structure.tower')
+var run = function (room, defCon) {
+  let towers = _.filter(room.find(FIND_MY_STRUCTURES), (structure) => {
+    return structure.structureType === STRUCTURE_TOWER
+  }
+  )
+  runTowers(towers, defCon)
+}
 
+var runTowers = function (towers, defCon) {
+  if (towers.length > 0) {
+    for (let tower of towers) {
+      structureTower.run(tower, defCon)
+    }
+  }
+}
 module.exports = {
-
+  run
 }

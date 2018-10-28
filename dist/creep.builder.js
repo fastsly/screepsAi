@@ -19,18 +19,21 @@ var run = function (creep, target, constSites) {
     if (!creep.memory.state) {
       creep.memory.state = STATE_SPAWNING
     }
+    if (target) {
+      if (creep.memory.target == null) {
+        creep.memory.target = target.id
+      }
 
-    if (creep.memory.target == null) {
-      creep.memory.target = target.id
-    }
-
-    if (Game.getObjectById(creep.memory.target) === null) {
-      creep.memory.target = target.id
+      if (Game.getObjectById(creep.memory.target) === null) {
+        creep.memory.target = target.id
+      }
+    } else {
+      creep.memory.state = STATE_SPAWNING
     }
 
     switch (creep.memory.state) {
       case STATE_SPAWNING:
-        runSpawning(creep, { nextState: STATE_MOVING })
+        runSpawning(creep, target, { nextState: STATE_MOVING })
         break
       case STATE_MOVING:
         try {
@@ -50,9 +53,9 @@ var run = function (creep, target, constSites) {
     console.log('i have an error in creep.buider ' + err)
   }
 }
-var runSpawning = function (creep) {
+var runSpawning = function (creep, target, options) {
 // "until it pops out of the spawn" -> when creep.spawning == false, we transition to the next state.
-  if (!creep.spawning) {
+  if (target || !creep.spawning) {
     creep.memory.state = STATE_MOVING// Set the creeps new state
     run(creep)// Call the main run function so that the next state function runs straight away
     // We put return here because once we transition to a different state, we don't want any of the following code in this function to run...
@@ -124,6 +127,13 @@ var runMoving = function (creep, target, constSites, options) {
     }
   }
   // Has the creep arrived?
+  if (pos === undefined || pos === null) {
+    let temp = creep.room.find(FIND_FLAGS, {
+      filter: (object) => {
+        if (object.name === 'Flag1') { return object }
+      } })
+    pos = temp[0]
+  }
   if (creep.pos.inRangeTo(pos, 1)) {
     creep.memory.state = transitionState
     // console.log('The status at the end2 ' + creep.memory.state)

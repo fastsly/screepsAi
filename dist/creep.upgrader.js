@@ -108,6 +108,13 @@ var runMoving = function (creep, options) {
       creep.memory.target = null
     }
   }
+  if (pos === undefined || pos === null) {
+    let temp = creep.room.find(FIND_FLAGS, {
+      filter: (object) => {
+        if (object.name === 'Flag1') { return object }
+      } })
+    pos = temp[0]
+  }
   // Has the creep arrived?
   if (creep.pos.inRangeTo(pos, 1)) {
     creep.memory.state = transitionState
