@@ -31,7 +31,7 @@ var defCon = function (room) {
 var energyNeed = function (current_room) { // set up prioritisation
   try {
     var constructionSites = current_room.find(FIND_MY_CONSTRUCTION_SITES)
-    var buildingsAll = current_room.find(FIND_MY_STRUCTURES)
+    var buildingsAll = current_room.find(FIND_STRUCTURES)
     var buildings = _.filter(buildingsAll, (structure) => { // subtract the current max carry capacity of carriers
       if ((structure.structureType === STRUCTURE_TOWER ||
         structure.structureType === STRUCTURE_SPAWN ||
@@ -39,11 +39,12 @@ var energyNeed = function (current_room) { // set up prioritisation
         structure.energy !== structure.energyCapacity) {
         return true
       } else {
-        if (structure.structureType === STRUCTURE_CONTAINER && _.sum(structure.store) !== structure.storeCapacity) {
+        if (structure.structureType === STRUCTURE_CONTAINER && _.sum(structure.store) < structure.storeCapacity) { // think of delay to container fillup so they dont try to fill in  50 energy but w8 until 300, 500
           let found = false
+          // console.log('containers var at energy need func is ' + structure.id + ' and source is ' + kilo)
           for (var kilo of resources.get_source_containers(current_room)) {
+            // console.log('containers var at energy need func is ' + structure.id + ' and source is ' + kilo)
             if (kilo === structure.id) {
-              // console.log("containers var at energy need func is "+structure.id+ ' and source is '+kilo)
               found = true
             }
           }
@@ -53,10 +54,16 @@ var energyNeed = function (current_room) { // set up prioritisation
         }
       }
     })
-    // console.log("buildings var at energy need func is "+buildings)
+    var extensions = _.filter(buildings, (structure) => {
+      if (structure.structureType === STRUCTURE_EXTENSION) {
+        return true
+      }
+    })
+    // console.log('buildings var at energy need func is ' + buildings)
     return {
       needEnergy: buildings,
-      constructionSite: constructionSites
+      constructionSite: constructionSites,
+      extensionsNr: extensions.length
     }
   } catch (err) {
     console.log('its in here in energyNeed: ' + err)

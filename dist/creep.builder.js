@@ -57,7 +57,7 @@ var runSpawning = function (creep, target, options) {
 // "until it pops out of the spawn" -> when creep.spawning == false, we transition to the next state.
   if (target || !creep.spawning) {
     creep.memory.state = STATE_MOVING// Set the creeps new state
-    run(creep)// Call the main run function so that the next state function runs straight away
+    // run(creep)// Call the main run function so that the next state function runs straight away
     // We put return here because once we transition to a different state, we don't want any of the following code in this function to run...
   }
 }
@@ -140,7 +140,7 @@ var runMoving = function (creep, target, constSites, options) {
     if (!flag) {
       creep.memory.state = transitionState
       // console.log('The status at the end2 ' + creep.memory.state)
-      run(creep, target, constSites)
+      // run(creep, target, constSites)
     }
   } else {
     creep.moveTo(pos)
@@ -155,7 +155,7 @@ var runGrabResource = function (creep, target, constSites, options) {
       creep.memory.grabTarget = null
       creep.memory.state = STATE_MOVING
       // console.log('The status at the end3 ' + creep.memory.state)
-      run(creep, target, constSites)
+      // run(creep, target, constSites)
     }
   } else {
     creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)
@@ -164,7 +164,7 @@ var runGrabResource = function (creep, target, constSites, options) {
     creep.memory.grabTarget = null
     creep.memory.state = options.nextState
     // console.log('The status at the end4 ' + creep.memory.state)
-    run(creep)
+    // run(creep)
   }
 }
 // TODO: make it so it doesnt just drop
@@ -181,20 +181,20 @@ var runConstruct = function (creep, target, constSites, options) {
     creep.drop(RESOURCE_ENERGY)
     creep.memory.state = options.nextState
     // console.log('The status at the end5 ' + creep.memory.state)
-    run(creep, target, constSites)
+    // run(creep, target, constSites)
   }
   if (!creep.pos.inRangeTo(Game.getObjectById(creep.memory.target).pos, 1)) {
     creep.memory.target = null
     creep.memory.state = options.nextState
     // console.log('The status at the end6 ' + creep.memory.state)
-    run(creep, target, constSites)
+    // run(creep, target, constSites)
   }
 
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null
     creep.memory.state = options.nextState
     // console.log('The status at the end6 ' + creep.memory.state)
-    run(creep, target, constSites)
+    // run(creep, target, constSites)
   }
 }
 module.exports = {

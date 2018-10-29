@@ -84,9 +84,9 @@ var run = function (room, energyNeed, toRepair) {
     */
     try {
       let sources = room.find(FIND_SOURCES)
-      console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
+      console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable) 
       // console.log('buidings need energy is ' + JSON.stringify(energyNeed.needEnergy))
-      if (room.energyAvailable < 550) {
+      if (energyNeed.extensionsNr < 5) {
         if (miners.length < 1) {
           creepFactory.run('miner', 1, room)
         } else
@@ -103,7 +103,7 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('upgrader', 1, room)
         } else
         if (energyNeed.constructionSite) {
-          if (/* builders.length<energyNeed.constructionSite.length && */ builders.length < 2) {
+          if (builders.length < energyNeed.constructionSite.length && builders.length < 2) {
             creepFactory.run('builder', 1, room)
           }
         } else
@@ -111,7 +111,7 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('repair', 1, room)
         }
       } else
-      if (room.energyAvailable < 800) {
+      if (energyNeed.extensionsNr < 10) {
         if (miners.length < 1) {
           creepFactory.run('miner', 2, room)
         } else
@@ -167,7 +167,7 @@ var run = function (room, energyNeed, toRepair) {
 var runHaulers = function (haulers, energyNeed, defCon) {
   if (haulers.length > 0) {
     let i = 0
-    console.log('builds needing energy are ' + JSON.stringify(energyNeed))
+    // console.log('builds needing energy are ' + JSON.stringify(energyNeed))
     if (energyNeed.length > 1) {
       for (let creep of haulers) {
         creepHauler.run(creep, energyNeed[i])

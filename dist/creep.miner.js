@@ -10,9 +10,7 @@ const resources = require('resources')
 const STATE_SPAWNING = 0
 const STATE_MOVING = 1
 const STATE_MINE = 2
-
 const utils = require('utils')
-// var    run = function (creep, ){}
 
 var run = function (creep) {
   if (!creep.memory.state) {
@@ -81,10 +79,11 @@ var runMoving = function (creep, options) {
   // try{
   let pos
   let targets = resources.get_source_containers(creep.room)
+  let flag = false
   // if (Memory[creep.room.name].source_containers_has_miner.length !== targets.length)
   if (creep.memory.target == null) {
     // we initialize the miner switches for source controller
-    console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
+    // console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
 
     if (!Memory[creep.room.name]) {
       Memory[creep.room.name] = {}
@@ -96,7 +95,7 @@ var runMoving = function (creep, options) {
 
     if (_.isEmpty(Memory[creep.room.name].source_containers_has_miner)) {
       if (targets) {
-        console.log('ive found my targets ' + targets)
+        // console.log('ive found my targets ' + targets)
         for (let i of targets) {
           Memory[creep.room.name].source_containers_has_miner[i] = false
         }
@@ -113,7 +112,7 @@ var runMoving = function (creep, options) {
       // console.log('in miners targets is '+targets)
       if (targets.length > 0) {
         if (targets !== undefined) { // if there is a free container assign it to creep and set switch for container
-          console.log('Ladies and gentleman we have containers')
+          // console.log('Ladies and gentleman we have containers')
           if (targets.length > 1) {
             filteredTargets = targets.filter(function (container) { // only containers that dont have a miner
               if (Memory[creep.room.name].source_containers_has_miner[container] === false) {
@@ -122,15 +121,15 @@ var runMoving = function (creep, options) {
                 return false
               }
             })
-            console.log('in miners targets is ' + filteredTargets + ' and source containers are ' + JSON.stringify(targets))
+            // console.log('in miners targets is ' + filteredTargets + ' and source containers are ' + JSON.stringify(targets))
             creep.memory.containers = true
             creep.memory.target = filteredTargets[0]
             Memory[creep.room.name].source_containers_has_miner[filteredTargets[0]] = true
-            console.log('i actuallly do this but i dont switch memory register to true')
+            // console.log('i actuallly do this but i dont switch memory register to true')
           } else {
-            console.log('we finally got here and ' + targets + ' and ' + Memory[creep.room.name].source_containers_has_miner[targets] + ' and source containers are ' + targets)
+            // console.log('we finally got here and ' + targets + ' and ' + Memory[creep.room.name].source_containers_has_miner[targets] + ' and source containers are ' + targets)
             if (Memory[creep.room.name].source_containers_has_miner[targets] === false) {
-              console.log('we finally got here')
+              // console.log('we finally got here')
               creep.memory.containers = true
               creep.memory.target = targets
               Memory[creep.room.name].source_containers_has_miner[targets] = true
@@ -141,6 +140,7 @@ var runMoving = function (creep, options) {
               } }
             )
             pos = temp[0].pos
+            flag = true
           }
         }
       } else {
@@ -165,18 +165,23 @@ var runMoving = function (creep, options) {
         if (object.name === 'Flag1') { return object }
       } })
     pos = temp[0]
+    flag = true
   }
 
   if (creep.memory.containers) {
     if (creep.pos.inRangeTo(pos, 0)) {
-      creep.memory.state = options.nextState
+      if (!flag) {
+        creep.memory.state = options.nextState
+      }
       run(creep)
     } else {
       creep.moveTo(pos, { reusePath: 50 })
     }
   } else {
     if (creep.pos.inRangeTo(pos, 1)) {
-      creep.memory.state = options.nextState
+      if (!flag) {
+        creep.memory.state = options.nextState
+      }
       run(creep)
     } else {
       creep.moveTo(pos, { reusePath: 50 })
