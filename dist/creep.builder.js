@@ -75,6 +75,7 @@ var haulerContext = function (creep, currentState) {
 }
 var runMoving = function (creep, target, constSites, options) {
   let pos
+  let flag = false
   var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState
   // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
   // var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
@@ -133,11 +134,14 @@ var runMoving = function (creep, target, constSites, options) {
         if (object.name === 'Flag1') { return object }
       } })
     pos = temp[0]
+    flag = true
   }
   if (creep.pos.inRangeTo(pos, 1)) {
-    creep.memory.state = transitionState
-    // console.log('The status at the end2 ' + creep.memory.state)
-    run(creep, target, constSites)
+    if (!flag) {
+      creep.memory.state = transitionState
+      // console.log('The status at the end2 ' + creep.memory.state)
+      run(creep, target, constSites)
+    }
   } else {
     creep.moveTo(pos)
   }
@@ -179,7 +183,7 @@ var runConstruct = function (creep, target, constSites, options) {
     // console.log('The status at the end5 ' + creep.memory.state)
     run(creep, target, constSites)
   }
-  if (!creep.pos.inRangeTo( Game.getObjectById(creep.memory.target).pos, 1)) {
+  if (!creep.pos.inRangeTo(Game.getObjectById(creep.memory.target).pos, 1)) {
     creep.memory.target = null
     creep.memory.state = options.nextState
     // console.log('The status at the end6 ' + creep.memory.state)
