@@ -8,6 +8,7 @@ var run = function (room, defCon) {
 }
 
 var runTowers = function (towers, defCon) {
+  // console.log('towers is ' + JSON.stringify(towers))
   if (towers.length > 0) {
     for (let tower of towers) {
       structureTower.run(tower, defCon)

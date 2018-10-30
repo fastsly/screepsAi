@@ -99,11 +99,11 @@ var run = function (room, energyNeed, toRepair) {
         if (haulers.length < 3) {
           creepFactory.run('carry', 1, room)
         } else
-        if (upgraders.length < 1) {
+        if (upgraders.length < 3) {
           creepFactory.run('upgrader', 1, room)
         } else
         if (energyNeed.constructionSite) {
-          if (builders.length < energyNeed.constructionSite.length && builders.length < 2) {
+          if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
             creepFactory.run('builder', 1, room)
           }
         } else
@@ -122,9 +122,9 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('miner', 2, room)
         } else
         if (haulers.length < sources.length + 1) {
-          creepFactory.run('carry', 2, room)
+          creepFactory.run('carry', 4, room)
         } else
-        if (upgraders.length < 3) {
+        if (upgraders.length < 1) {
           creepFactory.run('upgrader', 2, room)
         } else
         if (energyNeed.constructionSite) {
@@ -132,7 +132,7 @@ var run = function (room, energyNeed, toRepair) {
             creepFactory.run('builder', 2, room)
           }
         } else
-        if (repairers.length < 1) {
+        if (repairers.length < 0) {
           creepFactory.run('repair', 1, room)
         }
       }
