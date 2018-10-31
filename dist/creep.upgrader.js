@@ -116,13 +116,21 @@ var runMoving = function (creep, options) {
     pos = temp[0]
   }
   // Has the creep arrived?
-  if (creep.pos.inRangeTo(pos, 1)) {
-    creep.memory.state = transitionState
-    // console.log('The status at the end1 ' + creep.memory.state)
-    run(creep)
+  if (creep.memory.grabTarget) {
+    if (creep.pos.inRangeTo(pos, 1)) {
+      creep.memory.state = transitionState
+      run(creep)
+    } else {
+      creep.moveTo(pos)//, {reusePath: 50})
+    }
   } else {
-    // console.log('The status at the end2 ' + creep.memory.state)
-    creep.moveTo(pos)//, {reusePath: 50})
+    console.log('creep ' + creep.name)
+    if (creep.pos.inRangeTo(pos, 2)) {
+      creep.memory.state = transitionState
+      run(creep)
+    } else {
+      creep.moveTo(pos)//, {reusePath: 50})
+    }
   }
 }
 

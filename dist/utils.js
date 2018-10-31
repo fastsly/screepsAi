@@ -41,8 +41,8 @@ var assign_container = function (creep, options) {
       console.log('i have error here 2')
     }
 
-    bubbleSort(containers, creep)
-
+    let tempArr = bubbleSort(containers, creep)
+    containers = tempArr
     try {
       for (let i of containers) {
         if (_.sum(Game.getObjectById(i).store) > creep.carryCapacity) {
@@ -60,19 +60,20 @@ var assign_container = function (creep, options) {
     console.log('i have an error in util assign container ' + err)
   }
 }
-function remove_target_container (targetId) {
-
+function removeTargetContainer (creep, targetId) {
+  Memory[creep.room.name].containers_creep_nr.targetId = Memory[creep.room.name].containers_creep_nr.targetId - 1
 }
 
 function bubbleSort (arr, creep) {
   try {
     var len = arr.length
-    for (var i = len - 1; i >= 0; i--) {
-      for (var j = 1; j <= i; j++) {
-        if (Memory[creep.room.name].containers_creep_nr[arr[j - 1].id] > Memory[creep.room.name].containers_creep_nr[arr[j].id]) {
-          var temp = arr[j - 1]
-          arr[j - 1] = arr[j]
-          arr[j] = temp
+    for (var i = 0; i < len; i++) {
+      // Notice that j < (length - i)
+      for (var j = 0; j < (len - i - 1); j++) {
+        if (Memory[creep.room.name].containers_creep_nr[arr[j]] > Memory[creep.room.name].containers_creep_nr[arr[j + 1]]) {
+          var temp = arr[j]
+          arr[j] = arr[j + 1]
+          arr[j + 1] = temp
         }
       }
     }

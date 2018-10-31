@@ -84,9 +84,10 @@ var run = function (room, energyNeed, toRepair) {
     */
     try {
       let sources = room.find(FIND_SOURCES)
-      console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable) 
+      console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
       // console.log('buidings need energy is ' + JSON.stringify(energyNeed.needEnergy))
       if (energyNeed.extensionsNr < 5) {
+        console.log('we spawn level 1' + energyNeed.extensionsNr)
         if (miners.length < 1) {
           creepFactory.run('miner', 1, room)
         } else
@@ -110,8 +111,9 @@ var run = function (room, energyNeed, toRepair) {
         if (repairers.length < 1) {
           creepFactory.run('repair', 1, room)
         }
-      } else
+      }
       if (energyNeed.extensionsNr < 10) {
+        console.log('we make lvl 2s')
         if (miners.length < 1) {
           creepFactory.run('miner', 2, room)
         } else

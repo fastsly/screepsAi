@@ -166,6 +166,7 @@ var runGrabResource = function (creep, options) {
     if (_.sum(creep.carry) < creep.carryCapacity) {
       creep.memory.grabTarget = null
       creep.memory.state = options.nextState
+      utils.removeTargetContainer(creep, creep.memory.grabTarget)
       run(creep)
       return
     }

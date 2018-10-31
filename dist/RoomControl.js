@@ -54,12 +54,12 @@ var energyNeed = function (current_room) { // set up prioritisation
         }
       }
     })
-    var extensions = _.filter(buildings, (structure) => {
+    var extensions = _.filter(buildingsAll, (structure) => {
       if (structure.structureType === STRUCTURE_EXTENSION) {
         return true
       }
     })
-    // console.log('buildings var at energy need func is ' + buildings)
+    // console.log('exten sions var at energy need func is ' + JSON.stringify(extensions))
     return {
       needEnergy: buildings,
       constructionSite: constructionSites,
