@@ -59,7 +59,15 @@ var energyNeed = function (current_room) { // set up prioritisation
         return true
       }
     })
-    // console.log('exten sions var at energy need func is ' + JSON.stringify(extensions))
+    let temp = _.sortBy(buildings, [function (o) {
+      if (o.energy) {
+        return o.energy
+      } else {
+        return o.store.energy
+      }
+    }])
+    buildings = temp
+    console.log('exten sions var at energy need func is ' + JSON.stringify(buildings))
     return {
       needEnergy: buildings,
       constructionSite: constructionSites,

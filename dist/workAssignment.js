@@ -85,7 +85,7 @@ var run = function (room, energyNeed, toRepair) {
     try {
       let sources = room.find(FIND_SOURCES)
       console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
-      // console.log('buidings need energy is ' + JSON.stringify(energyNeed.needEnergy))
+      console.log('Miners: ' + miners.length + ' Haulers: ' + haulers.length + ' Upgraders: ' + upgraders.length + ' Builders: ' + builders.length + ' Repair: ' + repairers.length)
       if (energyNeed.extensionsNr < 5) {
         console.log('we spawn level 1' + energyNeed.extensionsNr)
         if (miners.length < 1) {
@@ -112,7 +112,7 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('repair', 1, room)
         }
       }
-      if (energyNeed.extensionsNr < 10) {
+      if (energyNeed.extensionsNr < 10 && (miners.length > 0 && haulers.length > 0)) {
         console.log('we make lvl 2s')
         if (miners.length < 1) {
           creepFactory.run('miner', 2, room)
@@ -135,6 +135,30 @@ var run = function (room, energyNeed, toRepair) {
           }
         } else
         if (repairers.length < 0) {
+          creepFactory.run('repair', 1, room)
+        }
+      } else {
+        if (miners.length < 1) {
+          creepFactory.run('miner', 1, room)
+        } else
+        if (haulers.length < 1 && miners.length > 0) {
+          creepFactory.run('carry', 1, room)
+        } else
+        if (miners.length < 3) {
+          creepFactory.run('miner', 1, room)
+        } else
+        if (haulers.length < 3) {
+          creepFactory.run('carry', 1, room)
+        } else
+        if (upgraders.length < 3) {
+          creepFactory.run('upgrader', 1, room)
+        } else
+        if (energyNeed.constructionSite) {
+          if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
+            creepFactory.run('builder', 1, room)
+          }
+        } else
+        if (repairers.length < 1) {
           creepFactory.run('repair', 1, room)
         }
       }
