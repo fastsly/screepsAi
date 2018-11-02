@@ -123,10 +123,10 @@ var run = function (room, energyNeed, toRepair) {
         if (miners.length < sources.length) {
           creepFactory.run('miner', 2, room)
         } else
-        if (haulers.length < sources.length + 1) {
+        if (haulers.length < sources.length + 3) {
           creepFactory.run('carry', 4, room)
         } else
-        if (upgraders.length < 1) {
+        if (upgraders.length < 3) {
           creepFactory.run('upgrader', 2, room)
         } else
         if (energyNeed.constructionSite) {
@@ -194,14 +194,18 @@ var runHaulers = function (haulers, energyNeed, defCon) {
   if (haulers.length > 0) {
     let i = 0
     // console.log('builds needing energy are ' + JSON.stringify(energyNeed))
-    if (energyNeed.length > 1) {
+    if (energyNeed.length >= haulers.length) {
       for (let creep of haulers) {
         creepHauler.run(creep, energyNeed[i])
         i++
       }
     } else {
       for (let creep of haulers) {
-        creepHauler.run(creep, energyNeed[0])
+        creepHauler.run(creep, energyNeed[i])
+        i++
+        if (i > energyNeed.length - 1) {
+          i = 0
+        }
       }
     }
   }

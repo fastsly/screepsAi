@@ -2,7 +2,7 @@ var run = function (tower, defCon) {
   try {
   // console.log(tower[0].id);
     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: (structure) => (structure.hits < 5000) && (structure.hits < structure.hitsMax)
+      filter: (structure) => (structure.hits < 10000) && (structure.hits < structure.hitsMax)
     })
     var allStructMax = tower.room.find(FIND_STRUCTURES, {
     // filter: (structure) => structure.hits < structure.hitsMax
