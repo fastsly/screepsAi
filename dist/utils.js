@@ -30,7 +30,7 @@ var assign_container = function (creep, options) {
         }
       }
 
-      if (_.isEmpty(Memory[creep.room.name].containers_creep_nr)) {
+      if (_.isEmpty(Memory[creep.room.name].containers_creep_nr) || _.size(Memory[creep.room.name].containers_creep_nr) < containers.length) {
         for (let i of containers) {
           let temp = i
           // console.log("we enter 1"+i)
@@ -44,12 +44,16 @@ var assign_container = function (creep, options) {
     let tempArr = bubbleSort(containers, creep)
     containers = tempArr
     try {
-      for (let i of containers) {
-        if (_.sum(Game.getObjectById(i).store) > creep.carryCapacity) {
-          // console.log('we found a container i ' + JSON.stringify(i))
-          Memory[creep.room.name].containers_creep_nr[i] = Memory[creep.room.name].containers_creep_nr[i] + 1
-          return i
+      if (containers.length > 1) {
+        for (let i of containers) {
+          if (_.sum(Game.getObjectById(i).store) > creep.carryCapacity) {
+            // console.log('we found a container i ' + JSON.stringify(i))
+            Memory[creep.room.name].containers_creep_nr[i] = Memory[creep.room.name].containers_creep_nr[i] + 1
+            return i
+          }
         }
+      } else {
+        return containers[0]
       }
     } catch (err) {
       console.log('i have error here 3')

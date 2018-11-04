@@ -178,7 +178,7 @@ var runConstruct = function (creep, target, constSites, options) {
     creep.build(Game.getObjectById(creep.memory.target))
   } else {
     creep.memory.target = null
-    creep.drop(RESOURCE_ENERGY)
+    // creep.drop(RESOURCE_ENERGY)
     creep.memory.state = options.nextState
     // console.log('The status at the end5 ' + creep.memory.state)
     // run(creep, target, constSites)

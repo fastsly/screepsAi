@@ -65,7 +65,7 @@ var run = function (creepType, level, room) {
         abilities = [WORK, CARRY, MOVE]
       } else
       if (level <= 2) {
-        abilities = [WORK, WORK, CARRY, MOVE, MOVE]
+        abilities = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
       }
       break
     case 'builder':
@@ -73,10 +73,10 @@ var run = function (creepType, level, room) {
         abilities = [WORK, CARRY, MOVE]
       } else
       if (level <= 2) {
-        abilities = [WORK, WORK, CARRY, MOVE, MOVE]
+        abilities = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
       } else
       if (level <= 3) {
-        abilities = [WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE]
+        abilities = [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
       }
       break
     case 'carry':
@@ -84,13 +84,13 @@ var run = function (creepType, level, room) {
         abilities = [CARRY, MOVE]
       } else
       if (level <= 2) {
-        abilities = [CARRY, CARRY, MOVE]
+        abilities = [CARRY, CARRY, CARRY, MOVE]
       } else
       if (level <= 3) {
-        abilities = [CARRY, CARRY, MOVE, MOVE]
+        abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
       } else
       if (level <= 4) {
-        abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]
+        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
       } else
       if (level <= 5) {
         abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]

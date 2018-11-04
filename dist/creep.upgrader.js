@@ -11,7 +11,7 @@ const STATE_MOVING = 1
 const STATE_UPGRADE = 2
 const STATE_GRAB_RESOURCE = 3
 
-const utils = require('utils')
+// const utils = require('utils')
 
 var run = function (creep, target) {
   // console.log('The status at the beggining ' + creep.memory.state)
@@ -119,7 +119,7 @@ var runMoving = function (creep, options) {
   if (creep.memory.grabTarget) {
     if (creep.pos.inRangeTo(pos, 1)) {
       creep.memory.state = transitionState
-      run(creep)
+      // run(creep)
     } else {
       creep.moveTo(pos)//, {reusePath: 50})
     }
@@ -127,7 +127,7 @@ var runMoving = function (creep, options) {
     console.log('creep ' + creep.name)
     if (creep.pos.inRangeTo(pos, 2)) {
       creep.memory.state = transitionState
-      run(creep)
+      // run(creep)
     } else {
       creep.moveTo(pos)//, {reusePath: 50})
     }

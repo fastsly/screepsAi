@@ -13,7 +13,7 @@ const STATE_GRAB_RESOURCE = 3
 
 const utils = require('utils')
 
-var run = function (creep, target) {
+var run = function (creep, target, repairs) {
   if (!creep.memory.state) {
     creep.memory.state = STATE_SPAWNING
   }
@@ -60,47 +60,75 @@ var haulerContext = function (creep, currentState) {
 
 var runMoving = function (creep, options) {
   var transitionState = options.context ? haulerContext(creep, STATE_MOVING).nextState : options.nextState
-
+  let pos
+  let flag = false
   // We know that creep.memory.targetPos is set up before this state is called. For haulers, it's set in haulerContext(), for other creep roles it would be set somewhere else...
   // var pos = new RoomPosition(creep.memory.targetPos.x, creep.memory.targetPos.y, creep.memory.targetPos.roomName);
   // meybe extract this v
-  let pos
   if (transitionState === STATE_GRAB_RESOURCE) {
-    if (creep.memory.grabTarget == null) { // when we  dont have a grabtarget
-      let temp_container = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_CONTAINER })
-      if (temp_container) { // when we have containers
-        creep.memeory.pickup = false
-        creep.memory.grabTarget = temp_container
-        pos = Game.getObjectById(creep.memory.grabTarget).pos
+    if (creep.memory.grabTarget === null) { // when we  dont have a grabtarget
+      let temp_container = utils.assign_container(creep)
+      let temp_pickup
+      // console.log('tempcontainer is ' + temp_container)
+      if (temp_container !== 'pickup') { // when we have containers
+        creep.memory.pickup = false
+        if (temp_container) { // when theyre not empty
+          creep.memory.grabTarget = temp_container
+          pos = Game.getObjectById(creep.memory.grabTarget).pos
+        } else { // when theyre empty
+          pos = Game.flags.Flag1.pos
+        }
       } else { // when we dont have containers
         creep.memory.pickup = true
-        temp_pickup = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {
-          filter: (object) => {
-            if (object.amount >= creep.carryCapacity) { return object }
-          }
-        })
-        creep.memory.grabTarget = temp_pickup.id
-        pos = Game.getObjectById(creep.memory.grabTarget).pos
+        temp_pickup = creep.room.find(FIND_DROPPED_RESOURCES /* ,{
+                    filter:(object)=>{
+                        if(object.amount>=creep.carryCapacity) {return object}
+                    }} */)
+        if (_.isEmpty(temp_pickup) === false) {
+          let rand = Math.floor(Math.random() * temp_pickup.length)
+          creep.memory.grabTarget = temp_pickup[rand].id
+          pos = Game.getObjectById(creep.memory.grabTarget).pos
+        } else {
+          pos = creep.room.find(FIND_FLAGS, {
+            filter: (object) => {
+              if (object.name === 'Flag1') { return object }
+            } })
+        }
       }
     } else { // when we know the grabtarget
-      pos = Game.getObjectById(creep.memory.grabTarget).pos
+      if (Game.getObjectById(creep.memory.grabTarget)) {
+        pos = Game.getObjectById(creep.memory.grabTarget).pos
+        // console.log(creep.name+' we have memory grabtarget')
+      } else {
+        creep.memory.grabTarget = null
+        // console.log('The status at the end1 ' + creep.memory.state)
+        run(creep)
+      }
     }
   } else { // when we go for depositing
-    pos = Game.getObjectById(creep.memory.target).pos
+    if (Game.getObjectById(creep.memory.target) !== null) {
+      pos = Game.getObjectById(creep.memory.target).pos
+    } else {
+      creep.memory.target = null
+    }
   }
+  // Has the creep arrived?
   if (pos === undefined || pos === null) {
     let temp = creep.room.find(FIND_FLAGS, {
       filter: (object) => {
         if (object.name === 'Flag1') { return object }
       } })
     pos = temp[0]
+    flag = true
   }
-  // Has the creep arrived?
   if (creep.pos.inRangeTo(pos, 1)) {
-    creep.memory.state = transitionState
-    run(creep)
+    if (!flag) {
+      creep.memory.state = transitionState
+      // console.log('The status at the end2 ' + creep.memory.state)
+      // run(creep, target, constSites)
+    }
   } else {
-    creep.moveTo(pos, { reusePath: 50 })
+    creep.moveTo(pos)
   }
 }
 
@@ -118,12 +146,38 @@ var runGrabResource = function (creep, options) {
   }
 }
 
-var runRepair = function (creep, options) {
-  creep.repair(Game.getObjectById(creep.memory.target))
+var runRepair = function (creep, repairs, options) {
+  /* creep.repair(Game.getObjectById(creep.memory.target))
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null
     creep.memory.state = options.nextState
     run(creep)
+  } */
+  let constIds = []
+  for (let x of repairs) {
+    constIds.push(x.id)
+  }
+  if (constIds.indexOf(creep.memory.target) > -1) {
+    creep.repair(Game.getObjectById(creep.memory.target))
+  } else {
+    creep.memory.target = null
+    // creep.drop(RESOURCE_ENERGY)
+    creep.memory.state = options.nextState
+    // console.log('The status at the end5 ' + creep.memory.state)
+    // run(creep, target, constSites)
+  }
+  if (!creep.pos.inRangeTo(Game.getObjectById(creep.memory.target).pos, 1)) {
+    creep.memory.target = null
+    creep.memory.state = options.nextState
+    // console.log('The status at the end6 ' + creep.memory.state)
+    // run(creep, target, constSites)
+  }
+
+  if (_.sum(creep.carry) === 0) {
+    creep.memory.target = null
+    creep.memory.state = options.nextState
+    // console.log('The status at the end6 ' + creep.memory.state)
+    // run(creep, target, constSites)
   }
 }
 

@@ -84,24 +84,6 @@ var runMoving = function (creep, options) {
   if (creep.memory.target == null) {
     // we initialize the miner switches for source controller
     // console.log('memory at miners ' + JSON.stringify(Memory[creep.room.name]))
-
-    if (!Memory[creep.room.name]) {
-      Memory[creep.room.name] = {}
-    }
-
-    if (!Memory[creep.room.name].source_containers_has_miner) {
-      Memory[creep.room.name].source_containers_has_miner = {}
-    }
-
-    if (_.isEmpty(Memory[creep.room.name].source_containers_has_miner)) {
-      if (targets) {
-        // console.log('ive found my targets ' + targets)
-        for (let i of targets) {
-          Memory[creep.room.name].source_containers_has_miner[i] = false
-        }
-      }
-    }
-
     if (!creep.memory.target) {
       creep.memory.target = null
     }
@@ -173,18 +155,18 @@ var runMoving = function (creep, options) {
       if (!flag) {
         creep.memory.state = options.nextState
       }
-      run(creep)
+      // run(creep)
     } else {
-      creep.moveTo(pos, { reusePath: 50 })
+      creep.moveTo(pos, { reusePath: 10 })
     }
   } else {
     if (creep.pos.inRangeTo(pos, 1)) {
       if (!flag) {
         creep.memory.state = options.nextState
       }
-      run(creep)
+      // run(creep)
     } else {
-      creep.moveTo(pos, { reusePath: 50 })
+      creep.moveTo(pos, { reusePath: 10 })
     }
   }
 }
