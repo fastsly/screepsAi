@@ -68,14 +68,14 @@ var energyNeed = function (current_room) { // set up prioritisation
       }
     }])
     buildings = temp
-    console.log('exten sions var at energy need func is ' + JSON.stringify(buildings))
+    // console.log('exten sions var at energy need func is ' + JSON.stringify(buildings))
     return {
       needEnergy: buildings,
       constructionSite: constructionSites,
       extensionsNr: extensions.length
     }
   } catch (err) {
-    console.log('its in here in energyNeed: ' + err)
+    // console.log('its in here in energyNeed: ' + err)
   }
 }
 

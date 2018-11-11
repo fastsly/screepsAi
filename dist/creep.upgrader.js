@@ -124,7 +124,7 @@ var runMoving = function (creep, options) {
       creep.moveTo(pos)//, {reusePath: 50})
     }
   } else {
-    console.log('creep ' + creep.name)
+    // console.log('creep ' + creep.name)
     if (creep.pos.inRangeTo(pos, 2)) {
       creep.memory.state = transitionState
       // run(creep)

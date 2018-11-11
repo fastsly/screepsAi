@@ -112,7 +112,7 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('repair', 1, room)
         }
       }
-      if (energyNeed.extensionsNr < 10 && (miners.length > 0 && haulers.length > 0)) {
+      if (energyNeed.extensionsNr < 100 && (miners.length > 0 && haulers.length > 0)) {
         console.log('we make lvl 2s')
         if (miners.length < 1) {
           creepFactory.run('miner', 2, room)
@@ -123,7 +123,7 @@ var run = function (room, energyNeed, toRepair) {
         if (miners.length < sources.length) {
           creepFactory.run('miner', 2, room)
         } else
-        if (haulers.length < sources.length + 3) {
+        if (haulers.length < sources.length + 2) {
           creepFactory.run('carry', 4, room)
         } else
         if (upgraders.length < 3) {
@@ -154,7 +154,7 @@ var run = function (room, energyNeed, toRepair) {
           creepFactory.run('upgrader', 1, room)
         } else
         if (energyNeed.constructionSite) {
-          if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
+          if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
             creepFactory.run('builder', 1, room)
           }
         } else

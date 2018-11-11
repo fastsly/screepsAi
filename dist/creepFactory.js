@@ -90,7 +90,7 @@ var run = function (creepType, level, room) {
         abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
       } else
       if (level <= 4) {
-        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
       } else
       if (level <= 5) {
         abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
