@@ -20,6 +20,10 @@ global.erstelleAufwerter = function(energie, home, spawn) {
         }
         return Game.spawns[spawn].createCreep(anzug, undefined, { rolle: 'aufwerter', voll: false , home:home, spawn: spawn});
 }
+for (let i in Game.flags){
+        //console.log(JSON.stringify(Game.flags))
+        console.log(Game.flags[i].name)
+    }
 module.exports = {
 
 };
