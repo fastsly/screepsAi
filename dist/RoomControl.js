@@ -13,11 +13,14 @@ var run = function (room) {
         }
       }
     })
-
+    let claim = false
+    if (Memory[room.name].claim) {
+      claim = true
+    }
     console.log('Source containers are ' + resources.count_source_containers(room))
     if (!Memory[room.name]) { Memory[room.name] = { } }
     handleSoureceContainerSwitches(room, resources.get_source_containers(room))
-    workAssignment.run(room, energyNeed(room), toRepair(room))
+    workAssignment.run(room, energyNeed(room), toRepair(room), claim)
     armyGeneral.run(room, defCon())
     // console.log(JSON.stringify(upgraders))
   } catch (err) {

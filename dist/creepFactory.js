@@ -102,6 +102,11 @@ var run = function (creepType, level, room) {
         abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
       }
       break
+    case 'claimer':
+      if (level <= 1) {
+        abilities = [MOVE, MOVE]
+      }
+      break
     case 'soldier':
       if (level <= 1) {
         abilities = [TOUGH, ATTACK, MOVE]

@@ -1,6 +1,6 @@
 const roomControl = require('RoomControl')
 const grafana = require('screepspl')
-
+const flags = require('flags')
 module.exports.loop = function () {
   try {
     grafana.collect_stats()
@@ -18,11 +18,11 @@ module.exports.loop = function () {
     let controlledRooms = []
     for (let name in Game.rooms) {
       if (Game.rooms[name].controller.my === true) {
-        console.log(controlledRooms)
+        //console.log(controlledRooms)
         controlledRooms.push(Game.rooms[name])
       }
     }
-
+    flags.run()
     for (let a of controlledRooms) {
       roomControl.run(a)
     }

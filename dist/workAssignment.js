@@ -11,9 +11,11 @@ const creepBuilder = require('creep.builder')
 const creepMiner = require('creep.miner')
 const creepRepair = require('creep.repair')
 const creepUpgrader = require('creep.upgrader')
+const creepClaimer = require('creep.claimer')
 const creepFactory = require('creepFactory')
+const flag = require('flags')
 
-var run = function (room, energyNeed, toRepair) {
+var run = function (room, energyNeed, toRepair, claim) {
   try {
     var miners = _.filter(room.find(FIND_CREEPS), (creep) => {
       if (creep.my === false) {
@@ -56,6 +58,14 @@ var run = function (room, energyNeed, toRepair) {
       }
     }
     )
+    var claimers = _.filter(Game.creeps, (creep) => {
+      if (creep.my === false) {
+        return false
+      } else {
+        return creep.memory.role === 'claimer'
+      }
+    }
+    )
     /* to dynamically assign miners nr
             var minerNr
             let sources = room.find(FIND_SOURCES);
@@ -82,89 +92,24 @@ var run = function (room, energyNeed, toRepair) {
                 }
             }
     */
-    try {
-      let sources = room.find(FIND_SOURCES)
-      console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
-      console.log('Miners: ' + miners.length + ' Haulers: ' + haulers.length + ' Upgraders: ' + upgraders.length + ' Builders: ' + builders.length + ' Repair: ' + repairers.length)
-      if (energyNeed.extensionsNr < 5) {
-        console.log('we spawn level 1' + energyNeed.extensionsNr)
-        if (miners.length < 1) {
-          creepFactory.run('miner', 1, room)
-        } else
-        if (haulers.length < 1 && miners.length > 0) {
-          creepFactory.run('carry', 1, room)
-        } else
-        if (miners.length < 3) {
-          creepFactory.run('miner', 1, room)
-        } else
-        if (haulers.length < 3) {
-          creepFactory.run('carry', 1, room)
-        } else
-        if (upgraders.length < 3) {
-          creepFactory.run('upgrader', 1, room)
-        } else
-        if (energyNeed.constructionSite) {
-          if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
-            creepFactory.run('builder', 1, room)
-          }
-        } else
-        if (repairers.length < 1) {
-          creepFactory.run('repair', 1, room)
-        }
-      }
-      if (energyNeed.extensionsNr < 100 && (miners.length > 0 && haulers.length > 0)) {
-        console.log('we make lvl 2s')
-        if (miners.length < 1) {
-          creepFactory.run('miner', 2, room)
-        } else
-        if (haulers.length < 1) {
-          creepFactory.run('carry', 2, room)
-        } else
-        if (miners.length < sources.length) {
-          creepFactory.run('miner', 2, room)
-        } else
-        if (haulers.length < sources.length + 2) {
-          creepFactory.run('carry', 4, room)
-        } else
-        if (upgraders.length < 3) {
-          creepFactory.run('upgrader', 2, room)
-        } else
-        if (energyNeed.constructionSite) {
-          if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
-            creepFactory.run('builder', 2, room)
-          }
-        } else
-        if (repairers.length < 0) {
-          creepFactory.run('repair', 1, room)
-        }
+
+    if (claim) {
+      if (claimers.length < 1) {
+        console.log('were makin clainmers')
+        creepFactory.run('claimer', 1, room)
       } else {
-        if (miners.length < 1) {
-          creepFactory.run('miner', 1, room)
-        } else
-        if (haulers.length < 1 && miners.length > 0) {
-          creepFactory.run('carry', 1, room)
-        } else
-        if (miners.length < 3) {
-          creepFactory.run('miner', 1, room)
-        } else
-        if (haulers.length < 3) {
-          creepFactory.run('carry', 1, room)
-        } else
-        if (upgraders.length < 3) {
-          creepFactory.run('upgrader', 1, room)
-        } else
-        if (energyNeed.constructionSite) {
-          if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
-            creepFactory.run('builder', 1, room)
+        if (claimers.length === 1) {
+          if (claimers[0].ticksToLive < 100) {
+            creepFactory.run('claimer', 1, room)
           }
-        } else
-        if (repairers.length < 1) {
-          creepFactory.run('repair', 1, room)
         }
       }
-    } catch (err) {
-      console.log('i have an error at creepfactory call in work assignment ' + err)
+      let target = flag.getClaimFlag(room)
+      console.log('claimers target is ' + target)
+      runClaimers(claimers, target)
     }
+
+    spawn(room, miners, haulers, builders, repairers, upgraders, energyNeed)
 
     try {
       try {
@@ -187,6 +132,93 @@ var run = function (room, energyNeed, toRepair) {
     }
   } catch (err) {
     console.log('i have an error in work assignment' + err)
+  }
+
+}
+
+function spawn (room, miners, haulers, builders, repairers, upgraders, energyNeed) {
+  try {
+    let sources = room.find(FIND_SOURCES)
+    console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
+    console.log('Miners: ' + miners.length + ' Haulers: ' + haulers.length + ' Upgraders: ' + upgraders.length + ' Builders: ' + builders.length + ' Repair: ' + repairers.length)
+    if (energyNeed.extensionsNr < 5) {
+      console.log('we spawn level 1' + energyNeed.extensionsNr)
+      if (miners.length < 1) {
+        creepFactory.run('miner', 1, room)
+      } else
+      if (haulers.length < 1 && miners.length > 0) {
+        creepFactory.run('carry', 1, room)
+      } else
+      if (miners.length < 3) {
+        creepFactory.run('miner', 1, room)
+      } else
+      if (haulers.length < 3) {
+        creepFactory.run('carry', 1, room)
+      } else
+      if (upgraders.length < 3) {
+        creepFactory.run('upgrader', 1, room)
+      } else
+      if (energyNeed.constructionSite) {
+        if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
+          creepFactory.run('builder', 1, room)
+        }
+      } else
+      if (repairers.length < 1) {
+        creepFactory.run('repair', 1, room)
+      }
+    }
+    if (energyNeed.extensionsNr < 100 && (miners.length > 0 && haulers.length > 0)) {
+      // console.log('we make lvl 2s')
+      if (miners.length < 1) {
+        creepFactory.run('miner', 2, room)
+      } else
+      if (haulers.length < 1) {
+        creepFactory.run('carry', 2, room)
+      } else
+      if (miners.length < sources.length) {
+        creepFactory.run('miner', 2, room)
+      } else
+      if (haulers.length < sources.length + 2) {
+        creepFactory.run('carry', 4, room)
+      } else
+      if (upgraders.length < 3) {
+        creepFactory.run('upgrader', 2, room)
+      } else
+      if (energyNeed.constructionSite) {
+        if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
+          creepFactory.run('builder', 2, room)
+        }
+      } else
+      if (repairers.length < 0) {
+        creepFactory.run('repair', 1, room)
+      }
+    } else {
+      if (miners.length < 1) {
+        creepFactory.run('miner', 1, room)
+      } else
+      if (haulers.length < 1 && miners.length > 0) {
+        creepFactory.run('carry', 1, room)
+      } else
+      if (miners.length < 3) {
+        creepFactory.run('miner', 1, room)
+      } else
+      if (haulers.length < 3) {
+        creepFactory.run('carry', 1, room)
+      } else
+      if (upgraders.length < 3) {
+        creepFactory.run('upgrader', 1, room)
+      } else
+      if (energyNeed.constructionSite) {
+        if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
+          creepFactory.run('builder', 1, room)
+        }
+      } else
+      if (repairers.length < 1) {
+        creepFactory.run('repair', 1, room)
+      }
+    }
+  } catch (err) {
+    console.log('i have an error at creepfactory call in work assignment ' + err)
   }
 }
 
@@ -232,6 +264,12 @@ var runUpgraders = function (upgraders, defCon) {
 var runRepairers = function (repairers, toRepair, defCon) {
   for (let creep of repairers) {
     creepRepair.run(creep, toRepair.pop())
+  }
+}
+
+var runClaimers = function (claimers, target) {
+  for (let creep of claimers) {
+    creepClaimer.run(creep, target)
   }
 }
 module.exports = {
