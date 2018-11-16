@@ -50,25 +50,18 @@ var runMoving = function (creep, options, target) {
   let pos
   let path
   if (creep.memory.target) {
-    pos = creep.memory.target
+    pos = creep.memory.target.pos
   }
 
-  if (pos === undefined || pos === null) {
-    /* let temp = creep.room.find(FIND_FLAGS, {
-      filter: (object) => {
-        if (object.name === 'Flag1') { return object }
-      } })
-    pos = temp[0]
-    flag = true */
-  }
-  console.log('position is ' + JSON.stringify(pos))
+  console.log('position is ' + JSON.stringify(pos.pos))
   if (creep.pos.inRangeTo(pos, 1)) {
     // run(creep)
   } else {
     try {
-      path = creep.pos.findPathTo(pos)
+      let roomPos = new RoomPosition(pos.x, pos.y, pos.roomName)
+      path = creep.pos.findPathTo(roomPos)
     } catch (err) {
-      console.log('FFFFFFFFUCK ' + err)
+      console.log('Error in creep.claimer ' + err)
     }
     let result = creep.moveByPath(path)
     console.log(`Result of creep.moveTo(new RoomPosition(23, 48, 'E49N34')): ${result}`)
