@@ -19,7 +19,7 @@ var run = function (room) {
     }
     console.log('Source containers are ' + resources.count_source_containers(room))
     if (!Memory[room.name]) { Memory[room.name] = { } }
-    handleSoureceContainerSwitches(room, resources.get_source_containers(room))
+    handleSourceContainerSwitches(room, resources.get_source_containers(room))
     workAssignment.run(room, energyNeed(room), toRepair(room), claim)
     armyGeneral.run(room, defCon())
     // console.log(JSON.stringify(upgraders))
@@ -82,20 +82,20 @@ var energyNeed = function (current_room) { // set up prioritisation
   }
 }
 
-var handleSoureceContainerSwitches = function (room, targets) {
-  if (!Memory[room]) {
-    Memory[room] = {}
+var handleSourceContainerSwitches = function (room, targets) {
+  if (!Memory[room.name]) {
+    Memory[room.name] = {}
   }
 
-  if (!Memory[room].source_containers_has_miner) {
-    Memory[room].source_containers_has_miner = {}
+  if (!Memory[room.name].source_containers_has_miner) {
+    Memory[room.name].source_containers_has_miner = {}
   }
 
-  if (_.isEmpty(Memory[room].source_containers_has_miner)) {
+  if (_.isEmpty(Memory[room.name].source_containers_has_miner)) {
     if (targets) {
       // console.log('ive found my targets ' + targets)
       for (let i of targets) {
-        Memory[room].source_containers_has_miner[i] = false
+        Memory[room.name].source_containers_has_miner[i] = false
       }
     }
   }
