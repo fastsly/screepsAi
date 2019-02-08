@@ -138,7 +138,7 @@ var run = function (room, energyNeed, toRepair, claim) {
 function spawn (room, miners, haulers, builders, repairers, upgraders, energyNeed) {
   try {
     let sources = room.find(FIND_SOURCES)
-    console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable)
+    console.log('Spawn energy in room ' + room.name + ' is ' + room.energyAvailable + ' and max cap is ' + room.energyCapacityAvailable)
     console.log('Miners: ' + miners.length + ' Haulers: ' + haulers.length + ' Upgraders: ' + upgraders.length + ' Builders: ' + builders.length + ' Repair: ' + repairers.length)
     if (energyNeed.extensionsNr < 5) {
       console.log('we spawn level 1' + energyNeed.extensionsNr)
@@ -252,8 +252,11 @@ var runMiners = function (miners) {
   var found = 0
   for (let creep of miners) {
     creepMiner.run(creep)
+    // console.log('ive fucked up creep: ' + creep.name + ' is ' + found + ' ' + creep.memory.target)
     if (found === creep.memory.target) {
-      delete Memory[creep.room.name].source_containers_has_miner[ found ]
+      // console.log('ive fucked up')
+      delete Memory[creep.room.name].source_containers_has_miner
+      creep.memory.target = undefined
       delete creep.memory.target
     }
     found = creep.memory.target

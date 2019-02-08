@@ -16,7 +16,7 @@ var run = function (tower, defCon) {
         full++
       }
     }
-
+    console.log('in towers' + full + ' and ' + Scontainers.length)
     if (!Memory[tower.room.name].HPcap) {
       Memory[tower.room.name].HPcap = 5000
     } else if (!closestDamagedStructure && tower.room.energyAvailable === tower.room.energyCapacityAvailable) {
