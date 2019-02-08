@@ -10,13 +10,13 @@ const resources = require('resources')
 const STATE_SPAWNING = 0
 const STATE_MOVING = 1
 const STATE_MINE = 2
-const utils = require('utils')
+// const utils = require('utils')
 
 var run = function (creep) {
   if (!creep.memory.state) {
     creep.memory.state = STATE_SPAWNING
   }
-  if (creep.ticksToLive < 4) {
+  if (creep.ticksToLive < 20) {
     if (creep.memory.target) {
       Memory[creep.room.name].source_containers_has_miner[creep.memory.target] = false
     }

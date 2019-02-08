@@ -133,7 +133,6 @@ var run = function (room, energyNeed, toRepair, claim) {
   } catch (err) {
     console.log('i have an error in work assignment' + err)
   }
-
 }
 
 function spawn (room, miners, haulers, builders, repairers, upgraders, energyNeed) {
@@ -250,8 +249,14 @@ var runBuilders = function (constSites, builders, defCon) {
 }
 
 var runMiners = function (miners) {
+  var found = 0
   for (let creep of miners) {
     creepMiner.run(creep)
+    if (found === creep.memory.target) {
+      delete Memory[creep.room.name].source_containers_has_miner[ found ]
+      delete creep.memory.target
+    }
+    found = creep.memory.target
   }
 }
 
