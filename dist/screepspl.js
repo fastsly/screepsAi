@@ -53,19 +53,19 @@ function collect_stats () {
     // Other memory stats here?
   }
 
-  Memory.stats.market = {
-    credits: Game.market.credits,
-    num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
-    active_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.active).length : 0,
-    inactive_orders: Game.market.orders ? _.filter(Game.market.orders, o => !o.active).length : 0,
-    // These are only actives
-    sell_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.type == ORDER_SELL && o.active).length : 0,
-    buy_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.type == ORDER_BUY && o.active).length : 0,
-    remaining_sell: Game.market.orders ? _.sum(_.filter(Game.market.orders, o => o.type == ORDER_SELL && o.active), o => o.remainingAmount) : 0,
-    remaining_buy: Game.market.orders ? _.sum(_.filter(Game.market.orders, o => o.type == ORDER_BUY && o.active), o => o.remainingAmount) : 0
-    // TODO: Add details like number of orders executed in last N ticks, amount traded last N ticks,
-    // open buy/sell orders/amounts by resource, etc.
-  }
+  // Memory.stats.market = {
+  //   credits: Game.market.credits,
+  //   num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
+  //   active_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.active).length : 0,
+  //   inactive_orders: Game.market.orders ? _.filter(Game.market.orders, o => !o.active).length : 0,
+  //   // These are only actives
+  //   sell_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.type == ORDER_SELL && o.active).length : 0,
+  //   buy_orders: Game.market.orders ? _.filter(Game.market.orders, o => o.type == ORDER_BUY && o.active).length : 0,
+  //   remaining_sell: Game.market.orders ? _.sum(_.filter(Game.market.orders, o => o.type == ORDER_SELL && o.active), o => o.remainingAmount) : 0,
+  //   remaining_buy: Game.market.orders ? _.sum(_.filter(Game.market.orders, o => o.type == ORDER_BUY && o.active), o => o.remainingAmount) : 0
+  //   // TODO: Add details like number of orders executed in last N ticks, amount traded last N ticks,
+  //   // open buy/sell orders/amounts by resource, etc.
+  // }
 
   Memory.stats.roomSummary = resources.summarize_rooms()
 

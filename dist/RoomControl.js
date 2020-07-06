@@ -4,25 +4,31 @@ const armyGeneral = require('armyGeneral')
 
 var run = function (room) {
   try {
-    let hostiles = room.find(FIND_CREEPS, {
-      filter: (creep) => {
-        if (creep.my === false) {
-          return true
-        } else {
-          return false
-        }
-      }
-    })
+    let cpu = Game.cpu.getUsed();
+    // let hostiles = room.find(FIND_CREEPS, {
+    //   filter: (creep) => {
+    //     if (creep.my === false) {
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   }
+    // })
     let claim = false
     if (Memory[room.name].claim) {
       claim = true
     }
     console.log('Source containers are ' + resources.count_source_containers(room))
     if (!Memory[room.name]) { Memory[room.name] = { } }
+    if (!Memory.stats.cpu.workAssignment){Memory.stats.cpu.workAssignment = {}}
+    if (!Memory.stats.cpu.armyGeneral){Memory.stats.cpu.armyGeneral = {}}
     handleSourceContainerSwitches(room, resources.get_source_containers(room))
     workAssignment.run(room, energyNeed(room), toRepair(room), claim)
+    Memory.stats.cpu.workAssignment[room.name]=Game.cpu.getUsed()-cpu
     armyGeneral.run(room, defCon())
+    Memory.stats.cpu.armyGeneral[room.name]=Game.cpu.getUsed()-Memory.stats.cpu.workAssignment[room.name]
     // console.log(JSON.stringify(upgraders))
+   // Memory.stats.cpu[room.name]=Game.cpu.getUsed()-cpu
   } catch (err) {
     console.log('i have an error in room control' + err)
   }
@@ -40,10 +46,10 @@ var energyNeed = function (current_room) { // set up prioritisation
       if ((structure.structureType === STRUCTURE_TOWER ||
         structure.structureType === STRUCTURE_SPAWN ||
         structure.structureType === STRUCTURE_EXTENSION) &&
-        structure.energy !== structure.energyCapacity) {
+        structure.energy < structure.energyCapacity-100) {
         return true
       } else {
-        if (structure.structureType === STRUCTURE_CONTAINER && _.sum(structure.store) < structure.storeCapacity) { // think of delay to container fillup so they dont try to fill in  50 energy but w8 until 300, 500
+        if (structure.structureType === STRUCTURE_CONTAINER && _.sum(structure.store) < structure.storeCapacity-200 ) { // think of delay to container fillup so they dont try to fill in  50 energy but w8 until 300, 500
           let found = false
           // console.log('containers var at energy need func is ' + structure.id + ' and source is ' + kilo)
           for (var kilo of resources.get_source_containers(current_room)) {

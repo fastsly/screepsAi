@@ -126,7 +126,7 @@ var run = function (room, energyNeed, toRepair, claim) {
       runBuilders(energyNeed.constructionSite, builders)
 
       runUpgraders(upgraders)
-      runRepairers(repairers, toRepair)
+      runRepairers(repairers, toRepair, room)
     } catch (err) {
       console.log('ive caught an error at runners in work assignment: ' + err)
     }
@@ -154,9 +154,12 @@ function spawn (room, miners, haulers, builders, repairers, upgraders, energyNee
       if (haulers.length < 3) {
         creepFactory.run('carry', 1, room)
       } else
-      if (upgraders.length < 3) {
+      if (upgraders.length < 3 && room.controller.level<8) {
         creepFactory.run('upgrader', 1, room)
       } else
+      if (upgraders.length < 1 && room.controller.level===8){
+         creepFactory.run('upgrader', 1, room)
+      }else
       if (energyNeed.constructionSite) {
         if (builders.length < energyNeed.constructionSite.length && builders.length < 4) {
           creepFactory.run('builder', 1, room)
@@ -167,7 +170,7 @@ function spawn (room, miners, haulers, builders, repairers, upgraders, energyNee
       }
     }
     if (energyNeed.extensionsNr < 100 && (miners.length > 0 && haulers.length > 0)) {
-      // console.log('we make lvl 2s')
+      //console.log('we make lvl 2s')
       if (miners.length < 1) {
         creepFactory.run('miner', 2, room)
       } else
@@ -177,20 +180,23 @@ function spawn (room, miners, haulers, builders, repairers, upgraders, energyNee
       if (miners.length < sources.length) {
         creepFactory.run('miner', 2, room)
       } else
-      if (haulers.length < sources.length + 2) {
-        creepFactory.run('carry', 4, room)
+      if (haulers.length < sources.length) {
+        creepFactory.run('carry', 5, room)
       } else
-      if (upgraders.length < 3) {
+      if (upgraders.length < 3 && room.controller.level<8) {
         creepFactory.run('upgrader', 2, room)
       } else
+      if (upgraders.length < 0 && room.controller.level===8){
+         creepFactory.run('upgrader', 2, room)
+      }else
+      if (repairers.length < 1) {
+        creepFactory.run('repair', 3, room)
+      }else
       if (energyNeed.constructionSite) {
         if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
           creepFactory.run('builder', 2, room)
         }
-      } else
-      if (repairers.length < 0) {
-        creepFactory.run('repair', 1, room)
-      }
+      }      
     } else {
       if (miners.length < 1) {
         creepFactory.run('miner', 1, room)
@@ -204,9 +210,12 @@ function spawn (room, miners, haulers, builders, repairers, upgraders, energyNee
       if (haulers.length < 3) {
         creepFactory.run('carry', 1, room)
       } else
-      if (upgraders.length < 3) {
+      if (upgraders.length < 3 && room.controller.level<8) {
         creepFactory.run('upgrader', 1, room)
       } else
+      if (upgraders.length < 1 && room.controller.level===8){
+         creepFactory.run('upgrader', 1, room)
+      }else
       if (energyNeed.constructionSite) {
         if (builders.length < energyNeed.constructionSite.length && builders.length < 3) {
           creepFactory.run('builder', 1, room)
@@ -230,13 +239,21 @@ var runHaulers = function (haulers, energyNeed, defCon) {
         creepHauler.run(creep, energyNeed[i])
         i++
       }
-    } else {
+    } else 
+    if (energyNeed.length< haulers.length && energyNeed.length != 0){
       for (let creep of haulers) {
         creepHauler.run(creep, energyNeed[i])
         i++
         if (i > energyNeed.length - 1) {
           i = 0
         }
+      }
+    } else
+    if (energyNeed.length === 0){
+      
+      for (let creep of haulers) {
+        console.log("ive sent storage order at work assignment"+creep.room.storage.pos)
+        creepHauler.run(creep, creep.room.storage)
       }
     }
   }
@@ -269,7 +286,17 @@ var runUpgraders = function (upgraders, defCon) {
   }
 }
 
-var runRepairers = function (repairers, toRepair, defCon) {
+var runRepairers = function (repairers, toRepair, room , defCon) {
+  toRepair=_.filter(toRepair,(structure) => {
+      return (structure.structureType === STRUCTURE_WALL || structure.structureType ===STRUCTURE_RAMPART) && structure.hits < Memory[room.name].HPcap
+    })
+    if (!Memory[tower.room.name].HPcap) {
+      Memory[tower.room.name].HPcap = 5000
+    } else if (toRepair.length === 0 && tower.room.energyAvailable === tower.room.energyCapacityAvailable) {
+      if (full === Scontainers.length) {
+        Memory[tower.room.name].HPcap = Memory[tower.room.name].HPcap + 5000
+      }
+    }
   for (let creep of repairers) {
     creepRepair.run(creep, toRepair.pop())
   }

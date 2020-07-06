@@ -153,25 +153,23 @@ var runRepair = function (creep, repairs, options) {
     creep.memory.state = options.nextState
     run(creep)
   } */
-  let constIds = []
-  for (let x of repairs) {
-    constIds.push(x.id)
-  }
-  if (constIds.indexOf(creep.memory.target) > -1) {
-    creep.repair(Game.getObjectById(creep.memory.target))
-  } else {
-    creep.memory.target = null
-    // creep.drop(RESOURCE_ENERGY)
-    creep.memory.state = options.nextState
-    // console.log('The status at the end5 ' + creep.memory.state)
-    // run(creep, target, constSites)
-  }
   if (!creep.pos.inRangeTo(Game.getObjectById(creep.memory.target).pos, 1)) {
     creep.memory.target = null
     creep.memory.state = options.nextState
     // console.log('The status at the end6 ' + creep.memory.state)
+    run(creep, target)
+  }
+
+  if (creep.memory.target && Game.getObjectById(creep.memory.target).hits< Memory[creep.room.name].HPcap && creep.store[RESOURCE_ENERGY]>0) {
+    creep.repair(Game.getObjectById(creep.memory.target))
+  } else {
+    creep.memory.target = null
+    // creep.drop(RESOURCE_ENERGY)
+    creep.memory.state = 1
+    // console.log('The status at the end5 ' + creep.memory.state)
     // run(creep, target, constSites)
   }
+  
 
   if (_.sum(creep.carry) === 0) {
     creep.memory.target = null

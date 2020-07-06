@@ -1,34 +1,41 @@
 const roomControl = require('RoomControl')
 const grafana = require('screepspl')
 const flags = require('flags')
+const profiler = require('screeps-profiler');
+profiler.enable();
 module.exports.loop = function () {
-  try {
-    grafana.collect_stats()
+  profiler.wrap(function() {
+    try {
+      grafana.collect_stats()
 
-    for (let name in Memory.creeps) {
-      if (!Game.creeps[name]) {
-        if (Memory.creeps[name].role === 'miner') { // when miner dies we delete the occupied mining position
-          // Memory.source_containers_has_miner[Memory.creeps[name].target] = false
+      for (let name in Memory.creeps) {
+        if (!Game.creeps[name]) {
+          if (Memory.creeps[name].role === 'miner') { // when miner dies we delete the occupied mining position
+            // Memory.source_containers_has_miner[Memory.creeps[name].target] = false
+          }
+          delete Memory.creeps[name]
+          console.log('Clearing non-existing creep memory:', name)
         }
-        delete Memory.creeps[name]
-        console.log('Clearing non-existing creep memory:', name)
       }
-    }
 
-    let controlledRooms = []
-    for (let name in Game.rooms) {
-      if (Game.rooms[name].controller.my === true) {
-        //console.log(controlledRooms)
-        controlledRooms.push(Game.rooms[name])
+      let controlledRooms = []
+      for (let name in Game.rooms) {
+        if (Game.rooms[name].controller.my === true) {
+          //console.log(controlledRooms)
+          controlledRooms.push(Game.rooms[name])
+        }
       }
-    }
-    flags.run()
-    for (let a of controlledRooms) {
-      roomControl.run(a)
-    }
+      Memory.stats.cpu.Main1=Game.cpu.getUsed();
+      flags.run()
+      Memory.stats.cpu.Flags=Game.cpu.getUsed()-Memory.myStats.cpu.Main1;
 
-    Memory.stats.cpu.used = Game.cpu.getUsed()
-  } catch (err) {
-    console.log('i have an error in main ' + err)
-  }
+      for (let a of controlledRooms) {
+        roomControl.run(a)
+      }
+
+      Memory.stats.cpu.used = Game.cpu.getUsed()
+    } catch (err) {
+      console.log('i have an error in main ' + err)
+    }
+  });
 }

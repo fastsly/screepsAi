@@ -2,7 +2,9 @@ node_modules
 npm-debug.log
 tmp
 .idea
-Gruntfile.js
+
 package.json
+package-lock.json
+.screeps.json
 /tasks/**
 LICENSE-MIT

@@ -114,6 +114,7 @@ var runMoving = function (creep, target, options) {
           }
         }
       } else { // when we go for depositing
+
         pos = Game.getObjectById(creep.memory.target).pos
         // console.log(creep.name+' we go deposit')
       }
@@ -189,18 +190,25 @@ var runDepositResource = function (creep, options) {
       return
     } else {
       creep.transfer(target, RESOURCE_ENERGY)
+      console.log('im depositing into container')
     }
-  } else {
-    if (target.structureType === STRUCTURE_TOWER || target.structureType === STRUCTURE_SPAWN || target.structureType === STRUCTURE_EXTENSION) {
-      if (target.energy === target.energyCapacity) {
-        creep.memory.target = null
-        creep.memory.state = options.nextState
-        return
-      } else {
-        creep.transfer(target, RESOURCE_ENERGY)
-      }
+  } else 
+  if (target.structureType === STRUCTURE_TOWER || target.structureType === STRUCTURE_SPAWN || target.structureType === STRUCTURE_EXTENSION) {
+    if (target.energy === target.energyCapacity) {
+      creep.memory.target = null
+      creep.memory.state = options.nextState
+      return
+    } else {
+      creep.transfer(target, RESOURCE_ENERGY)
+      console.log("im depositing into spawn tower extension")
     }
+  }else
+  if(target.structureType === STRUCTURE_STORAGE){
+    creep.transfer(target, RESOURCE_ENERGY)
+    console.log("im finally depositing into storage")
   }
+  
+  
   if (_.sum(creep.carry) === 0) {
     // util.remove_target_container(creep.memory.target)
     creep.memory.target = null

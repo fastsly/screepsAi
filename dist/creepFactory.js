@@ -65,7 +65,10 @@ var run = function (creepType, level, room) {
         abilities = [WORK, CARRY, MOVE]
       } else
       if (level <= 2) {
-        abilities = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
+        abilities = [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+      } else
+      if (level <= 3) {
+        abilities = [WORK, WORK, WORK, WORK,CARRY, CARRY, CARRY, CARRY,CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,MOVE, MOVE, MOVE]
       }
       break
     case 'builder':
@@ -90,10 +93,10 @@ var run = function (creepType, level, room) {
         abilities = [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
       } else
       if (level <= 4) {
-        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
       } else
       if (level <= 5) {
-        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+        abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
       } else
       if (level <= 6) {
         abilities = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
@@ -167,7 +170,22 @@ var run = function (creepType, level, room) {
       break
   }
   console.log('Spawn level ' + level + ' ' + creepType + ' in room ' + room.name)
+
+  if (spawn[0].spawning === null){
   spawn[0].spawnCreep(abilities, creepType + '-' + id, { memory: { role: creepType, target: null } })
+  }//else   //fix the fuckinh double spawning somthing like a spawning queue in memory or some shit
+  // if(spawn.length>1){
+  //   if (spawn[1].spawning === null){
+  //     spawn[1].spawnCreep(abilities, creepType + '-' + id, { memory: { role: creepType, target: null } })
+  //   }
+  // }else
+  // if (spawn.length>2){
+  //   if (spawn[2].spawning === null){
+  //     spawn[2].spawnCreep(abilities, creepType + '-' + id, { memory: { role: creepType, target: null } })
+  //   }
+  //}
+
+
 }
 
 module.exports = {
