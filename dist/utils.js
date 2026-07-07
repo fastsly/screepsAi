@@ -65,7 +65,7 @@ var assign_container = function (creep, options) {
   }
 }
 function removeTargetContainer (creep, targetId) {
-  Memory[creep.room.name].containers_creep_nr.targetId = Memory[creep.room.name].containers_creep_nr.targetId - 1
+  Memory[creep.room.name].containers_creep_nr[targetId] = Memory[creep.room.name].containers_creep_nr[targetId] - 1
 }
 
 function bubbleSort (arr, creep) {
@@ -88,5 +88,6 @@ function bubbleSort (arr, creep) {
 }
 
 module.exports = {
-  assign_container
+  assign_container,
+  removeTargetContainer
 }

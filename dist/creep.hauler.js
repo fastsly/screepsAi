@@ -75,11 +75,7 @@ var runMoving = function (creep, target, options) {
               creep.memory.grabTarget = temp_container
               pos = Game.getObjectById(creep.memory.grabTarget).pos
             } else { // when theyre empty
-              pos = creep.room.find(FIND_FLAGS, {
-                filter: (object) => {
-                  if (object.name === 'Flag1') { return object }
-                } }
-              )
+              pos = creep.room.find(FIND_FLAGS).find(f => f.name === 'Flag1')
             }
           } else { // when we dont have containers
             creep.memory.pickup = true
@@ -94,12 +90,7 @@ var runMoving = function (creep, target, options) {
               pos = Game.getObjectById(creep.memory.grabTarget).pos
               // console.log(creep.name+' we have dropped resources')
             } else {
-              pos = creep.room.find(FIND_FLAGS, {
-                filter: (object) => {
-                  if (object.name === 'Flag1') { return object }
-                } }
-
-              )
+              pos = creep.room.find(FIND_FLAGS).find(f => f.name === 'Flag1')
               // console.log(creep.name+' we go to flag')
             }
             // console.log(creep.name+' entered we dont have containers')
@@ -128,10 +119,7 @@ var runMoving = function (creep, target, options) {
   try {
     // Has the creep arrived?
     if (pos === undefined || pos === null) {
-      let temp = creep.room.find(FIND_FLAGS, {
-        filter: (object) => {
-          if (object.name === 'Flag1') { return object }
-        } })
+      let temp = creep.room.find(FIND_FLAGS).find(f => f.name === 'Flag1')
       pos = temp[0].pos
       flag = true
     }
@@ -164,17 +152,14 @@ var runMoving = function (creep, target, options) {
 var runGrabResource = function (creep, options) {
   if (creep.memory.pickup) {
     creep.pickup(Game.getObjectById(creep.memory.grabTarget))
-    if (_.sum(creep.carry) < creep.carryCapacity) {
-      creep.memory.grabTarget = null
-      creep.memory.state = options.nextState
-      utils.removeTargetContainer(creep, creep.memory.grabTarget)
-      run(creep)
-      return
-    }
   } else {
     creep.withdraw(Game.getObjectById(creep.memory.grabTarget), RESOURCE_ENERGY)
   }
+
   if (_.sum(creep.carry) === creep.carryCapacity) {
+    if (!creep.memory.pickup) {
+      utils.removeTargetContainer(creep, creep.memory.grabTarget)
+    }
     creep.memory.grabTarget = null
     creep.memory.state = options.nextState
     run(creep)
@@ -183,6 +168,11 @@ var runGrabResource = function (creep, options) {
 
 var runDepositResource = function (creep, options) {
   let target = Game.getObjectById(creep.memory.target)
+  if (!target) {
+    creep.memory.target = null
+    creep.memory.state = options.nextState
+    return
+  }
   if (target.structureType === STRUCTURE_CONTAINER) {
     if (_.sum(target.store) === target.storeCapacity) {
       creep.memory.target = null
